@@ -1,0 +1,46 @@
+name: Deploy Laravel Support App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Start LaravelSupport deploying
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d text="🚀 Acode deploy starting (ветка *${{ github.ref_name }}*)"
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/laravelsupport || exit 1
+            git pull origin main || exit 1
+            composer install --no-dev --optimize-autoloader || exit 1
+            php artisan migrate --force || exit 1
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+      - name: deploy finished
+        if: success()
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d text="✅ deploy finished successfully for *${{ github.repository }}* on branch *${{ github.ref_name }}*"
+
+      - name: DEploy failed
+        if: failure()
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d text="❌ Deploy Error *${{ github.repository }}* on branch *${{ github.ref_name }}*. Check pipeline."
