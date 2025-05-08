@@ -24,6 +24,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/laravelsupport || exit 1
+            git reset --hard HEAD
             git pull origin main || exit 1
             composer install --no-dev --optimize-autoloader || exit 1
             php artisan migrate --force || exit 1
