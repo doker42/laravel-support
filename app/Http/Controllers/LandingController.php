@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ContactFormMail;
+use App\Jobs\SendMailJetNotification;
+use App\Jobs\SendTelegramNotification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Mailjet\Resources;
+use Artesaos\SEOTools\Facades\SEOMeta;
+use Artesaos\SEOTools\Facades\OpenGraph;
+use Artesaos\SEOTools\Facades\JsonLd;
+
 
 class LandingController extends Controller
 {
     public function index()
     {
+        SEOMeta::setTitle('Laravel Support & Maintenance Services');
+        SEOMeta::setDescription('We provide expert Laravel maintenance, security, and development support.');
+
+        OpenGraph::setTitle('Laravel Support & Maintenance Services')
+            ->setDescription('We provide expert Laravel maintenance, security, and development support.')
+            ->setUrl(url()->current())
+            ->addProperty('type', 'website');
+
+        JsonLd::setTitle('Laravel Support & Maintenance Services');
+        JsonLd::setDescription('We provide expert Laravel maintenance, security, and development support.');
+
         return view('landing.landing');
     }
 
@@ -24,71 +36,13 @@ class LandingController extends Controller
             'message' => 'required|string',
         ]);
 
-        // Отправка email (если нужно)
-        $resMail = $this->sendMail($data) ? "Success" : "Failed";
+        dispatch(new \App\Jobs\TestJob());
+//        dispatch(new SendTelegramNotification($data));
+//        dispatch(new SendMailJetNotification($data));
 
-        // Отправка в Telegram
-        $message = "📬 New Contact Request:\n\n"
-            . "👤 Name: {$data['name']}\n"
-            . "✉️ Email: {$data['email']}\n"
-            . "📝 Message:\n{$data['message']}\n"
-            . " email_sendind: {$resMail}";
-
-        $token = env('TELEGRAM_BOT_TOKEN');
-        $chat_id = env('TELEGRAM_CHAT_ID');
-
-
-        Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
-            'chat_id' => $chat_id,
-            'text'    => $message,
-        ]);
-
-        return back()->with('success', 'Message sent!');
+        return back()->with('success', 'Message was sent!');
     }
 
-    public function sendMail(array $data)
-    {
-        $apiKey    = env('MAILJET_API_KEY');
-        $secretKey = env('MAILJET_SECRET_KEY');
-
-        if (!$apiKey || !$secretKey) {
-            return false;
-        }
-
-        $mj = new \Mailjet\Client($apiKey, $secretKey, true, ['version' => 'v3.1']);
-
-        $body = [
-            'Messages' => [
-                [
-                    'From' => [
-                        'Email' => 'doker42@gmail.com',
-                        'Name'  => $data['name'],
-                    ],
-                    'To' => [
-                        [
-                            'Email' => env('MAIL_TO'),
-                            'Name'  => "laravelSupport"
-                        ]
-                    ],
-                    'Subject' => "laravelSupport",
-                    'TextPart' => "Это текстовое письмо",
-                    'HTMLPart' => "<h3>Congrads!</h3><p>". $data['email'] . " message: " . $data['message'] . "</p>"
-                ]
-            ]
-        ];
-
-        $response = $mj->post(Resources::$Email, ['body' => $body]);
-
-//        if ($response->success()) {
-//            Log::info( "Успешно отправлено!");
-//        } else {
-//            Log::info($response->getStatus());
-//            Log::info($response->getData());
-//        }
-
-        return (bool) $response->success();
-
-    }
 }
 
 

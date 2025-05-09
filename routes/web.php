@@ -5,4 +5,4 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [LandingController::class, 'index']);
-Route::post('/contact', [LandingController::class, 'contact']);
+Route::post('/contact', [LandingController::class, 'contact'])->middleware(\App\Http\Middleware\ThrottleContactForm::class);

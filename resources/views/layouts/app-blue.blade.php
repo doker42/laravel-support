@@ -3,79 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Laravel Support & Maintenance Company">
+{{--    <meta name="description" content="Laravel Support & Maintenance Company">--}}
     <meta name="keywords" content="Laravel, Support, Maintenance, Web Development">
-    <meta name="author" content="Your Company">
+    <meta name="author" content="Laravel Support">
+
     <title>Laravel Support Company</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f1f5f9; color: #1f2937; }
-        section { padding: 60px 0; }
-        .hero {
-            background-color: #e2e8f0;
-            text-align: center;
-            padding: 100px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            /*background: rgba(155, 178, 101, 0.6);*/
-            background: rgb(155 178 191 / 60%);
-        /*rgb(155 178 191 / 60%)*/
-            z-index: 2;
-        }
-        .hero::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background: url('assets/site/img/serv-4-3-1.png') center/cover no-repeat;
-            z-index: 1;
-            color: white;
-        }
-        .hero > .container {
-            position: relative;
-            z-index: 3;
-            color: white;
 
-        }
-        .pricing .card {
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
-            background-color: #ffffff;
-        }
-        footer {
-            background: #1f2937;
-            color: white;
-            padding: 30px 0;
-        }
-        .form-control:focus {
-            box-shadow: none;
-            border-color: #38bdf8;
-        }
-        .navbar-light .navbar-nav .nav-link {
-            color: #1f2937;
-        }
-        .navbar-light .navbar-nav .nav-link:hover {
-            color: #0ea5e9;
-        }
-        .btn-primary {
-            background-color: #0ea5e9;
-            border-color: #0ea5e9;
-        }
-        .btn-primary:hover {
-            background-color: #0284c7;
-            border-color: #0284c7;
-        }
-    </style>
+    {{-- SEO Meta Tags --}}
+    {!! SEOMeta::generate() !!}
+    {!! OpenGraph::generate() !!}
+    {!! JsonLd::generate() !!}
+
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/app-blue.css'])
+
 </head>
 <body>
 
@@ -169,7 +110,7 @@
                     <ul class="list-unstyled">
                         <li>Any workload</li>
                         <li>Dedicated manager</li>
-                        <li>Telegram/Slack support</li>
+                        <li>Telegram/Jira support</li>
                     </ul>
                 </div>
             </div>
@@ -181,9 +122,21 @@
 <section id="contact" class="bg-light">
     <div class="container">
         <h2 class="text-center mb-4">Contact Us</h2>
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+
+        <!-- Modal -->
+        <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content contact-sent">
+                    <div class="modal-body text-center">
+                        {{ session('success') }}
+                    </div>
+                    <div class="text-center pb-3">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <form method="POST" action="/contact" class="mx-auto" style="max-width: 600px;">
             @csrf
             <div class="mb-3">
@@ -209,5 +162,13 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+@if(session('success'))
+    <script>
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+    </script>
+@endif
+
 </body>
 </html>
