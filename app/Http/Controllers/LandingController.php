@@ -36,9 +36,9 @@ class LandingController extends Controller
             'message' => 'required|string',
         ]);
 
-        dispatch(new \App\Jobs\TestJob());
-//        dispatch(new SendTelegramNotification($data));
-//        dispatch(new SendMailJetNotification($data));
+//        dispatch(new \App\Jobs\TestJob());
+        dispatch(new SendTelegramNotification($data));
+        dispatch(new SendMailJetNotification($data));
 
         return back()->with('success', 'Message was sent!');
     }
