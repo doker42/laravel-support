@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5aa3b4712765a9f40759fed08ad490c8",
+    "content-hash": "ccf508679bb7138c3b51512682f5f9dd",
     "packages": [
         {
             "name": "artesaos/seotools",
@@ -552,47 +552,6 @@
                 }
             ],
             "time": "2024-02-05T11:56:58+00:00"
-        },
-        {
-            "name": "doker42/laravel-telegram-log",
-            "version": "1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doker42/telegramlog.git",
-                "reference": "9634cc6e6b06217b4f8760896fde18b4abb3dbd8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doker42/telegramlog/zipball/9634cc6e6b06217b4f8760896fde18b4abb3dbd8",
-                "reference": "9634cc6e6b06217b4f8760896fde18b4abb3dbd8",
-                "shasum": ""
-            },
-            "require": {
-                "irazasyed/telegram-bot-sdk": "^3.14",
-                "php": "^8.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Doker42\\Telegramlog\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "doker",
-                    "email": "doker42@gmail.com"
-                }
-            ],
-            "description": "laravel logger to telegram chat",
-            "support": {
-                "issues": "https://github.com/doker42/telegramlog/issues",
-                "source": "https://github.com/doker42/telegramlog/tree/1.0"
-            },
-            "time": "2024-04-14T19:34:28+00:00"
         },
         {
             "name": "dragonmantank/cron-expression",

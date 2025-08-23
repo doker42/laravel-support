@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Target;
 use App\Models\TargetStatus;
-use Doker42\Telegramlog\TelegramLogger;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +13,6 @@ class TargetHttpStatusChecker
     public function check(Target $target)
     {
         Log::info('TEST Error : ');
-
 
 
         try {

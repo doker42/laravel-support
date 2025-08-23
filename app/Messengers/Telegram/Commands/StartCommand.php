@@ -4,7 +4,6 @@ namespace App\Messengers\Telegram\Commands;
 
 use App\Helpers\TelegramConst;
 use App\Messengers\Telegram\Buttons\InlineButton;
-use App\Socialite\Telegram\Buttons\KeyboardButton;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
