@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Target;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TargetController extends Controller
@@ -52,7 +53,32 @@ class TargetController extends Controller
      */
     public function show(Target $target)
     {
-        //
+        if ($target) {
+            $periods = config('target.periods');
+            $targetStatuses = $target->targetStatus;
+            $statuses = [];
+
+            foreach ($targetStatuses as $targetStatus) {
+                if ($targetStatus->start_date && $targetStatus->stop_date) {
+
+                    $diff = $targetStatus->start_date->diff($targetStatus->stop_date);
+                    $statuses[] = [
+                        'stop'  => $targetStatus->stop_date,
+                        'start' => $targetStatus->start_date,
+                        'downtime' => $diff->format('%h:%I'),
+                    ];
+                } elseif (!$targetStatus->start_date && $targetStatus->stop_date) {
+                    $statuses[] = [
+                        'stop'  => $targetStatus->stop_date,
+                        'start' => $targetStatus->start_date,
+                        'downtime' => 'doesnt work',
+                    ];
+                }
+            }
+
+            return view('admin.targets.show', ['target' => $target, 'periods' => $periods, 'statuses' => $statuses]);
+        }
+        return redirect(route('target_list'))->withErrors('Failed get target!');
     }
 
     /**

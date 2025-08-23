@@ -11,4 +11,11 @@ class TargetStatus extends Model
         'stop_date',
         'start_date'
     ];
+
+    protected $casts = [
+        'start_date' => 'datetime',
+        'stop_date'  => 'datetime',
+    ];
+
+    protected $table = 'target_statuses';
 }

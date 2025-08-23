@@ -34,7 +34,11 @@
                     <tr>
                         <td>{{$num}}</td>
                         <td>{{$target->id}}</td>
-                        <td>{{$target->url}}</td>
+                        <td>
+                            <a class="btn-outline-secondary" href="{{ route('target_show', ['target' => $target]) }}">
+                                {{$target->url}}
+                            </a>
+                        </td>
                         <td>{{$target->period}}</td>
                         <td>
                             @php($active = (bool)$target->active)

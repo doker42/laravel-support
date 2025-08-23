@@ -20,6 +20,7 @@ Route::group(['prefix' => config('admin.admin_prefix'), 'middleware' => ['auth']
             Route::get('/', 'index')->name('target_list');
             Route::get('/create', 'create')->name('target_create');
             Route::post('/store', 'store')->name('target_store');
+            Route::get('/show/{target}', 'show')->name('target_show');
             Route::get('/edit/{target}', 'edit')->name('target_edit');
             Route::post('/update/{target}', 'update')->name('target_update');
             Route::delete('/destroy/{target}', 'destroy')->name('target_destroy');

@@ -15,9 +15,9 @@ class Target extends Model
         'active'
     ];
 
-    public function targetStatus(): hasMany
+    public function targetStatus(): HasMany
     {
-        return $this->hasMany(TargetStatus::class);
+        return $this->hasMany(TargetStatus::class, 'target_id');
     }
 
     /**
