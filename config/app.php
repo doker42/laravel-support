@@ -130,5 +130,6 @@ return [
 //        'Twitter'   => Artesaos\SEOTools\Facades\TwitterCard::class,
         'JsonLd'    => Artesaos\SEOTools\Facades\JsonLd::class,
         'SEO'       => Artesaos\SEOTools\Facades\SEOTools::class,
+        'Route' => Illuminate\Support\Facades\Route::class,
     ],
 ];

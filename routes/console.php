@@ -11,4 +11,12 @@ Artisan::command('inspire', function () {
 
 return function (Schedule $schedule) {
     $schedule->command('queue:work --stop-when-empty')->everyMinute();
+
+    $schedule->command('targets:check 60')->everyMinute();
+
+    $schedule->command('targets:check 300')->everyFiveMinutes();
+
+    $schedule->command('targets:check 1800')->everyThirtyMinutes();
+
+    $schedule->command('targets:check 3600')->hourly();
 };
