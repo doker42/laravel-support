@@ -2,6 +2,8 @@
 
 return [
 
+    'test' => env('TEST_TELEGRAM_LOGGER', 'no_test'),
+
     'channels' => [
 
         'info' => [

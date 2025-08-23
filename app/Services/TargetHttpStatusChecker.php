@@ -12,13 +12,14 @@ class TargetHttpStatusChecker
 {
     public function check(Target $target)
     {
-        Log::info('TEST Telegram : ');
+        if (config('telegramlog.test') == 'test') {
+            Log::info('TEST Telegram : ');
 
-        $this->sendToTelegram([
-            'text' => 'TargetSite Test',
-            'message' => 'TargetSite Test Message',
-        ]);
-
+            $this->sendToTelegram([
+                'text' => 'TargetSite Test',
+                'message' => 'TargetSite Test Message',
+            ]);
+        }
 
         try {
             $response = Http::timeout(10)->get($target->url);
