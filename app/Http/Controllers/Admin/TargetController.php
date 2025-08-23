@@ -41,10 +41,10 @@ class TargetController extends Controller
         $target = Target::create($input);
 
         if ($target) {
-            return redirect(route('admin_work_list'))->with(['status' => __("All ok!")]);
+            return redirect(route('target_list'))->with(['status' => __("All ok!")]);
         }
 
-        return redirect(route('admin_work_create'))->withErrors(__('Failed to create target'));
+        return redirect(route('target_create'))->withErrors(__('Failed to create target'));
     }
 
     /**
