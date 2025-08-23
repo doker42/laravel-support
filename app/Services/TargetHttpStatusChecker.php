@@ -12,7 +12,12 @@ class TargetHttpStatusChecker
 {
     public function check(Target $target)
     {
-        Log::info('TEST Error : ');
+        Log::info('TEST Telegram : ');
+
+        $this->sendToTelegram([
+            'text' => 'TargetSite Test',
+            'message' => 'TargetSite Test Message',
+        ]);
 
 
         try {
