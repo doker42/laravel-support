@@ -39,6 +39,10 @@ class TargetController extends Controller
             'period'  => 'required|integer|max:3600',
         ]);
 
+        $input['telegraph_client_id'] = 1; //default
+        $input['telegraph_chat_id']   = 1; //default
+        $input['active'] = 1; //default
+
         $target = Target::create($input);
 
         if ($target) {

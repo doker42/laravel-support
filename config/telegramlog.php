@@ -2,7 +2,7 @@
 
 return [
 
-    'test' => env('TEST_TELEGRAM_LOGGER', 'no_test'),
+    'test' => env('TEST_TELEGRAM_LOGGER', 0),
 
     'channels' => [
 

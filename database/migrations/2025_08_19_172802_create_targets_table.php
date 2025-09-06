@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\TelegraphClient;
+use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('targets', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(TelegraphClient::class)->references('id')->on('telegraph_clients')->cascadeOnDelete();
+            $table->foreignIdFor(TelegraphChat::class)->references('id')->on('telegraph_chats')->cascadeOnDelete();
             $table->string('url');
             $table->integer('period');
             $table->tinyInteger('active')->default(0);
