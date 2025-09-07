@@ -92,9 +92,15 @@ class TargetsService
     }
 
 
-    public function control(TelegraphChat $chat, $targetId)
+    public function control(TelegraphChat $chat, $targetId, TelegraphClient $client)
     {
         $target = Target::find($targetId);
+
+        if ($target->telergaph_client_id !== $client->id) {
+            $chat->message('You dont have access to this target!')
+                ->send();
+            return;
+        }
 
         $keyboard = Keyboard::make();
 

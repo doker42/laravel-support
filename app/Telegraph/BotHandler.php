@@ -66,7 +66,7 @@ class BotHandler extends WebhookHandler
     public function show(): void
     {
         $targetId = $this->data->get('target_id');
-        app(TargetsService::class)->control($this->chat, $targetId);
+        app(TargetsService::class)->control($this->chat, $targetId, $this->client());
     }
 
     public function delete(): void
