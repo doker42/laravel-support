@@ -24,15 +24,7 @@ class TargetHttpStatusChecker
 
         $tlgChat = TelegraphChat::find($target->telegraph_chat_id);
 
-
-        try {
-            $response = Http::timeout(10)->get($target->url);
-            $statusCode = $response->status();
-
-        } catch (\Throwable $e) {
-            $statusCode = 0; // ошибка соединения
-            Log::info('Error : ' . $e->getMessage());
-        }
+        $statusCode = self::getStatusTwice($target);
 
         $lastStatus = TargetStatus::where('target_id', $target->id)->latest()->first();
 
@@ -44,8 +36,8 @@ class TargetHttpStatusChecker
 
                 /** to Telegram chat messaging */
                 $this->sendToTelegram([
-                    'text' => 'TargetSite restored',
-                    'message' => $target->url . ' again works!',
+                    'text' => 'Resource available again',
+                    'message' => $target->url . ' is working again!',
                 ]);
 
                 if ($tlgChat) $tlgChat->message($target->url . ' again works!')->send();
@@ -58,8 +50,8 @@ class TargetHttpStatusChecker
                 ]);
 
                 $this->sendToTelegram([
-                    'text' => 'TargetSite down',
-                    'message' => $target->url . ' doesnt works!',
+                    'text' => 'Resource unavailable',
+                    'message' => $target->url . ' isn’t working!',
                 ]);
 
                 if ($tlgChat) $tlgChat->message($target->url . ' doesnt works!')->send();
@@ -133,6 +125,29 @@ class TargetHttpStatusChecker
         } catch (\Exception $e) {
             return  "Error URL: " . $e->getMessage();
         }
+    }
+
+
+    public static function getStatus(Target $target, int $timeout = 5): int
+    {
+        try {
+            $response = Http::timeout($timeout)->get($target->url);
+            $statusCode = $response->status();
+
+        } catch (\Throwable $e) {
+            $statusCode = 0;
+            Log::info('Error : ' . $e->getMessage());
+        }
+
+        return $statusCode;
+    }
+
+
+    public static function getStatusTwice(Target $target): int
+    {
+        $status = self::getStatus($target);
+
+        return $status === 200 ? $status : self::getStatus($target, 10);
     }
 
 }
