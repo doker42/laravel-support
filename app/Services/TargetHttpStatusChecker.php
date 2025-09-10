@@ -40,7 +40,7 @@ class TargetHttpStatusChecker
                     'message' => $target->url . ' is working again!',
                 ]);
 
-                if ($tlgChat) $tlgChat->message($target->url . ' again works!')->send();
+                if ($tlgChat) $tlgChat->message($target->url . ' available again!')->send();
             }
         } else {
             if (!$lastStatus || $lastStatus->start_date) {
@@ -54,7 +54,7 @@ class TargetHttpStatusChecker
                     'message' => $target->url . ' isn’t working!',
                 ]);
 
-                if ($tlgChat) $tlgChat->message($target->url . ' doesnt works!')->send();
+                if ($tlgChat) $tlgChat->message($target->url . ' unavailable!')->send();
             }
         }
     }
