@@ -96,7 +96,7 @@ class TargetsService
     {
         $target = Target::find($targetId);
 
-        if ($target->telergaph_client_id !== $client->id) {
+        if ($target->telegraph_client_id !== $client->id) {
             $chat->message('You dont have access to this target!')
                 ->send();
             return;
