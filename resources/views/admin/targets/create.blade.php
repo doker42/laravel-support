@@ -33,12 +33,12 @@
                                 <input name="url" type="text" class="form-control" value="{{old('url')}}" required>
                             </div>
                         </div>
-                        {{-- PERIODS --}}
+                        {{-- INTERVAL --}}
                         <div class="col-sm-6 mb-3">
                             <div class="form-group">
-                                <label>{{__('Periods')}}</label>
-                                <select class="form-select" name="period" id="period" >
-                                    @foreach($periods as $key => $value)
+                                <label>{{__('Intervals')}}</label>
+                                <select class="form-select" name="interval" id="interval" >
+                                    @foreach($intervals as $key => $value)
                                         <option value="{{$value}}">{{$key}}</option>
                                     @endforeach
                                 </select>

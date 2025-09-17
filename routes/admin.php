@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\TargetController;
+use App\Http\Controllers\Admin\TelegraphClientController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -26,16 +28,28 @@ Route::group(['prefix' => config('admin.admin_prefix'), 'middleware' => ['auth']
             Route::delete('/destroy/{target}', 'destroy')->name('target_destroy');
         });
     });
-//    Route::group(['prefix' => 'works'], function () {
-//        Route::controller( AdminWorkController::class)->group(function () {
-//            Route::get('/list', 'index')->name('admin_work_list');
-//            Route::get('/create', 'create')->name('admin_work_create');
-//            Route::get('/edit/{id}', 'edit')->name('admin_work_edit');
-//            Route::post('/store', 'store')->name('admin_work_store');
-//            Route::post('/update/{id}', 'update')->name('admin_work_update');
-//            Route::delete('/destroy/{id}', 'destroy')->name('admin_work_destroy');
-//        });
-//    });
+    Route::group(['prefix' => 'plans'], function () {
+        Route::controller( PlanController::class)->group(function () {
+            Route::get('/', 'index')->name('plan_list');
+            Route::get('/create', 'create')->name('plan_create');
+            Route::post('/store', 'store')->name('plan_store');
+            Route::get('/show/{plan}', 'show')->name('plan_show');
+            Route::get('/edit/{plan}', 'edit')->name('plan_edit');
+            Route::post('/update/{plan}', 'update')->name('plan_update');
+            Route::delete('/destroy/{plan}', 'destroy')->name('plan_destroy');
+        });
+    });
+    Route::group(['prefix' => 'clients'], function () {
+        Route::controller( TelegraphClientController::class)->group(function () {
+            Route::get('/', 'index')->name('client_list');
+//            Route::get('/create', 'create')->name('client_create');
+//            Route::post('/store', 'store')->name('client_store');
+//            Route::get('/show/{plan}', 'show')->name('client_show');
+            Route::get('/edit/{client}', 'edit')->name('client_edit');
+            Route::post('/update/{client}', 'update')->name('client_update');
+            Route::delete('/destroy/{client}', 'destroy')->name('client_destroy');
+        });
+    });
 //    Route::group(['prefix' => 'settings'], function () {
 //        Route::controller( AdminSettingController::class)->group(function () {
 //            Route::get('/list', 'index')->name('admin_setting_list');

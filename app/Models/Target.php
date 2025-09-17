@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property int $telegraph_client_id
  * @property int $telegraph_chat_id
  * @property string $url
- * @property int $period
+ * @property int $interval
  * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -40,7 +40,7 @@ class Target extends Model
         'telegraph_client_id',
         'telegraph_chat_id',
         'url',
-        'period',
+        'interval',
         'active'
     ];
 
@@ -77,18 +77,18 @@ class Target extends Model
         $status  = true;
 
         if (empty($url)) {
-            $message = "URL не может быть пустым. . Try again";
+            $message = "URL dont be empty. Try again";
             $status  = false;
         }
 
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            $message = "Некорректный URL. . Try again";
+            $message = "Invalid URL. . Try again";
             $status  = false;
         }
 
         $scheme = parse_url($url, PHP_URL_SCHEME);
         if (!in_array($scheme, ['http', 'https'])) {
-            $message = "URL должен начинаться с http:// или https://. Try again";
+            $message = "URL should begin with http:// or https://. Try again";
             $status  = false;
         }
 

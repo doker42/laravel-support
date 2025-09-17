@@ -24,7 +24,7 @@
                     <th scope="col">#</th>
                     <th scope="col">ID</th>
                     <th scope="col">{{__('Url')}}</th>
-                    <th scope="col">{{__('Period')}}</th>
+                    <th scope="col">{{__('Interval')}}</th>
                     <th scope="col">{{__('Active')}}</th>
                     <th scope="col">{{__('Actions')}}</th>
                 </tr>
@@ -39,14 +39,14 @@
                                 {{$target->url}}
                             </a>
                         </td>
-                        <td>{{$target->period}}</td>
+                        <td>{{$target->interval}}</td>
                         <td>
                             @php($active = (bool)$target->active)
                             <button class="btn btn-outline-{{$active ? 'success' : 'secondary'}} btn-sm">
                                 {{$active ? 'ON' : 'OFF'}}
                             </button>
                         </td>
-                        <td>
+                        <td  style="display: flex; gap: 5px; align-items: center;">
                             <a class="btn-outline-secondary" href="{{ route('target_edit', ['target' => $target]) }}">
                                 <button class="btn btn-outline-warning btn-sm">
                                     <svg class="bi"><use xlink:href="#edit"/></svg>

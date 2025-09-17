@@ -24,9 +24,9 @@ class TargetController extends Controller
      */
     public function create()
     {
-        $periods = config('target.periods');
+        $intervals = config('target.intervals');
 
-        return view('admin.targets.create', ['periods' => $periods]);
+        return view('admin.targets.create', ['intervals' => $intervals]);
     }
 
     /**
@@ -35,8 +35,8 @@ class TargetController extends Controller
     public function store(Request $request)
     {
         $input = $request->validate([
-            'url'     => 'required|string|max:255|unique:targets,url',
-            'period'  => 'required|integer|max:3600',
+            'url'       => 'required|string|max:255|unique:targets,url',
+            'interval'  => 'required|integer|max:3600',
         ]);
 
         $input['telegraph_client_id'] = 1; //default
@@ -92,8 +92,9 @@ class TargetController extends Controller
     {
         if ($target) {
 
-            $periods = config('target.periods');
-            return view('admin.targets.edit', ['target' => $target, 'periods' => $periods]);
+            $intervals = config('target.intervals');
+
+            return view('admin.targets.edit', ['target' => $target, 'intervals' => $intervals]);
         }
         return redirect(route('target_list'))->withErrors('Failed get target!');
     }
@@ -105,7 +106,7 @@ class TargetController extends Controller
     {
         $input = $request->validate([
             'url' => 'required|url|max:255|unique:targets,url,' . $target->id,
-            'period' => 'required|string|max:255',
+            'interval'  => 'required|integer|max:3600',
             'active' => ''
         ]);
 

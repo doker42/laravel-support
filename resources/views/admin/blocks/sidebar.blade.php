@@ -18,6 +18,18 @@
                         {{__('Targets')}}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2" href="{{route('plan_list')}}">
+                        <svg class="bi"><use xlink:href="#people"/></svg>
+                        {{__('Plans')}}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2" href="{{route('client_list')}}">
+                        <svg class="bi"><use xlink:href="#people"/></svg>
+                        {{__('Clients')}}
+                    </a>
+                </li>
 {{--                <li class="nav-item">--}}
 {{--                    <a class="nav-link d-flex align-items-center gap-2" href="{{route('user_list')}}">--}}
 {{--                        <svg class="bi"><use xlink:href="#people"/></svg>--}}

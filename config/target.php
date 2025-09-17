@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'periods' => [
+    'intervals' => [
         '1 min'  => 60,
         '5 min'  => 60 * 5,
         '30 min' => 60 * 30,
