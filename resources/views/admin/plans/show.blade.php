@@ -37,7 +37,7 @@
                         <td>Limit</td><td>{{$plan->limit}}</td>
                     </tr>
                     <tr>
-                        <td>Period</td><td>{{$plan->period}}</td>
+                        <td>Interval</td><td>{{$plan->interval}}</td>
                     </tr>
                     <tr>
                         <td>Duration</td><td>{{$plan->duration}}</td>

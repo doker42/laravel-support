@@ -37,7 +37,7 @@ class PlanController extends Controller
             'description'  => 'required|string|max:2000',
             'price'        => 'required|integer|max:100',
             'limit'        => 'required|integer|max:100',
-            'period'       => 'required|integer|max:3600',
+            'interval'     => 'required|integer|max:3600',
             'duration'     => 'required|integer|max:100',
             'active'       => '',
         ]);
@@ -89,7 +89,7 @@ class PlanController extends Controller
             'description'  => 'required|string|max:2000',
             'price'        => 'required|integer|max:100',
             'limit'        => 'required|integer|max:100',
-            'period'       => 'required|integer|max:3600',
+            'interval'     => 'required|integer|max:3600',
             'duration'     => 'required|integer|max:1000',
             'active'       => '',
         ]);

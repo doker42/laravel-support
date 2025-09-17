@@ -46,7 +46,7 @@
                         <td>{{$plan->description}}</td>
                         <td>{{$plan->price}}</td>
                         <td>{{$plan->limit}}</td>
-                        <td>{{$plan->period}}</td>
+                        <td>{{$plan->interval}}</td>
                         <td>{{$plan->duration}}</td>
                         <td>
                             @php($active = (bool)$plan->active)

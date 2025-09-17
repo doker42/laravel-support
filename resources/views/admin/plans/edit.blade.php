@@ -65,7 +65,7 @@
                             <div class="col-sm-3 mb-3">
                                 <div class="form-group">
                                     <label>{{__('Interval')}}</label>
-                                    <input name="period" type="number" class="form-control" value="{{$plan->period}}" required>
+                                    <input name="interval" type="number" class="form-control" value="{{$plan->interval}}" required>
                                 </div>
                             </div>
                             {{-- Duration --}}

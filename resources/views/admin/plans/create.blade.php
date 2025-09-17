@@ -64,11 +64,11 @@
                                 <input name="duration" type="number" class="form-control" value="{{old('duration')}}" required>
                             </div>
                         </div>
-                        {{-- PERIOD --}}
+                        {{-- INTERVAL --}}
                         <div class="col-sm-3 mb-3">
                             <div class="form-group">
-                                <label>{{__('Period')}}</label>
-                                <input name="period" type="number" class="form-control" value="{{old('duration')}}" required>
+                                <label>{{__('Interval')}}</label>
+                                <input name="interval" type="number" class="form-control" value="{{old('interval')}}" required>
                             </div>
                         </div>
                     </div>

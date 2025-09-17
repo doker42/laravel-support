@@ -13,7 +13,7 @@ class Plan extends Model
         'description',
         'price',
         'limit',
-        'period',
+        'interval',
         'duration',
         'active',
     ];
