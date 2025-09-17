@@ -5,6 +5,7 @@ namespace App\Telegraph\Services;
 use App\Models\Target;
 use App\Models\TelegraphClient;
 use App\Services\TargetHttpStatusChecker;
+use App\Traits\TelegramTrait;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Models\TelegraphBot;
@@ -13,6 +14,8 @@ use Illuminate\Support\Stringable;
 
 class TargetsService
 {
+    use TelegramTrait;
+
     public function awaitTarget(TelegraphChat $chat, TelegraphClient $client): void
     {
         if (!$client->checkPlanLimit()) {
@@ -32,6 +35,16 @@ class TargetsService
             $message = 'Trial limit achieved ('. $client->plan->limit . ' target).';
             $chat->message($message)->send();
             return;
+        }
+
+        /** check targets count */
+        $allTargetsCount = Target::all()->count();
+        if ($allTargetsCount >= config('custom.targets.limit')) {
+            $serviceMessage = [
+                'text'    => 'Targets limit is reached',
+                'message' => "You app reached $allTargetsCount targets!",
+            ];
+            $this->sendToTelegram($serviceMessage);
         }
 
         $result = TargetHttpStatusChecker::checkUrlComplex($text);
@@ -96,7 +109,7 @@ class TargetsService
     {
         $target = Target::find($targetId);
 
-        if ($target->telergaph_client_id !== $client->id) {
+        if ($target->telegraph_client_id !== $client->id) {
             $chat->message('You dont have access to this target!')
                 ->send();
             return;

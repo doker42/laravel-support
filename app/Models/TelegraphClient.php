@@ -7,12 +7,15 @@ use Carbon\Carbon;
 use DefStudio\Telegraph\Models\TelegraphBot;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 
 class TelegraphClient extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'chat_id',
+        'plan_id',
         'await',
         'name',
         'end_subscription'

@@ -3,7 +3,6 @@
 namespace App\Telegraph\Commands;
 
 use App\Models\TelegraphClient;
-use App\Telegraph\Services\AddTargetService;
 use App\Telegraph\Services\TargetsService;
 use DefStudio\Telegraph\Models\TelegraphChat;
 

@@ -13,8 +13,11 @@ use Illuminate\Database\Eloquent\Builder;
  * @property int $telegraph_client_id
  * @property int $telegraph_chat_id
  * @property string $url
- * @property int $period
+ * @property int $interval
+ * @property int $previous_status
+ * @property int $last_status
  * @property int $active
+ * @property \Illuminate\Support\Carbon|null $last_checked_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TargetStatus> $targetStatus
@@ -36,12 +39,21 @@ class Target extends Model
 {
     public const PERIOD_DEFAULT = 300;
 
+    public const STATUS_OK = 200;
+
     protected $fillable = [
         'telegraph_client_id',
         'telegraph_chat_id',
         'url',
-        'period',
+        'interval',
+        'previous_status',
+        'last_status',
+        'last_checked_at',
         'active'
+    ];
+
+    protected $casts = [
+        'last_checked_at' => 'datetime',
     ];
 
     public function targetStatus(): HasMany
@@ -77,18 +89,18 @@ class Target extends Model
         $status  = true;
 
         if (empty($url)) {
-            $message = "URL не может быть пустым. . Try again";
+            $message = "URL can not be empty. Try again";
             $status  = false;
         }
 
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            $message = "Некорректный URL. . Try again";
+            $message = "Incorrect URL. Try again";
             $status  = false;
         }
 
         $scheme = parse_url($url, PHP_URL_SCHEME);
         if (!in_array($scheme, ['http', 'https'])) {
-            $message = "URL должен начинаться с http:// или https://. Try again";
+            $message = "URL should be begin with http:// or https://. Try again";
             $status  = false;
         }
 
@@ -103,8 +115,5 @@ class Target extends Model
     {
         Target::where('id', $id)->update(['active' => $active]);
     }
-
-
-
 
 }

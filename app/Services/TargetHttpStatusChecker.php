@@ -100,7 +100,7 @@ class TargetHttpStatusChecker
                 ];
             } else {
                 return [
-                    'message' => "URL come back status " . $response->status(),
+                    'message' => "URL come back with status " . $response->status(),
                     'status'  => false,
                 ];
             }

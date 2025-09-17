@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule as ScheduleTarget;
 
 Artisan::command('inspire', function () {
@@ -16,7 +17,7 @@ ScheduleTarget::command('targets:check 1800')->everyMinute();
 ScheduleTarget::command('targets:check 3600')->everyMinute();
 
 ScheduleTarget::command('subscriptions-update')->dailyAt('01:07');
-
+//ScheduleTarget::command('handle-target-status')->everyMinute();
 
 Artisan::command('set-command', function () {
     $telBot = \DefStudio\Telegraph\Models\TelegraphBot::find(1);
@@ -27,5 +28,7 @@ Artisan::command('set-command', function () {
         'info'    => 'about',
         'add'     => 'add target',
     ])->send();
+
+//    Log::info('set-command');
 
 });
