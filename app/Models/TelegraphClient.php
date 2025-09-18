@@ -13,6 +13,7 @@ class TelegraphClient extends Model
 {
     protected $fillable = [
         'chat_id',
+        'plan_id',
         'await',
         'name',
         'end_subscription'
