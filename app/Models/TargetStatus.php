@@ -9,6 +9,7 @@ class TargetStatus extends Model
     protected $fillable = [
         'target_id' ,
         'stop_date',
+        'status',
         'start_date'
     ];
 

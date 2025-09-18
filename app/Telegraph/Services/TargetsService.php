@@ -53,7 +53,7 @@ class TargetsService
                 'telegraph_client_id' => $client->id,
                 'telegraph_chat_id'   => $tlgChat->id,
                 'url'    => $text,
-                'period' => Target::PERIOD_DEFAULT,
+                'period' => Target::INTERVAL_DEFAULT,
                 'active' => 1,
             ]);
 

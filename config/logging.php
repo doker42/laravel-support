@@ -127,6 +127,19 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'checked_status' => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/checked_status.log'),
+            'days'   => env('LOG_DAILY_DAYS', 5),
+            'level'  => 'info',
+        ],
+
+        'status_error' => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/status_error.log'),
+            'days'   => env('LOG_DAILY_DAYS', 5),
+            'level'  => 'warning',
+        ],
     ],
 
 ];

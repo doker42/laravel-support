@@ -132,4 +132,6 @@ return [
         'SEO'       => Artesaos\SEOTools\Facades\SEOTools::class,
         'Route' => Illuminate\Support\Facades\Route::class,
     ],
+
+    'control_log_enabled' => env('CONTROL_LOG_ENABLED', 0),
 ];

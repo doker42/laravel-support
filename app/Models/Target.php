@@ -34,13 +34,18 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Target extends Model
 {
-    public const PERIOD_DEFAULT = 300;
+    public const INTERVAL_DEFAULT = 300;
+
+    public const STATUS_OK = 200;
 
     protected $fillable = [
         'telegraph_client_id',
         'telegraph_chat_id',
         'url',
         'interval',
+        'previous_status',
+        'last_status',
+        'last_checked_at',
         'active'
     ];
 

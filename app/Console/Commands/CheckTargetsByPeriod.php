@@ -27,9 +27,9 @@ class CheckTargetsByPeriod extends Command
      */
     public function handle()
     {
-        $period = (int) $this->argument('period');
+        $interval = (int) $this->argument('period');
 
-        $targets = Target::where('period', $period)->active()->get();
+        $targets = Target::where('interval', $interval)->active()->get();
 
         if (count($targets)) {
             foreach ($targets as $target) {
@@ -37,6 +37,6 @@ class CheckTargetsByPeriod extends Command
             }
         }
 
-        $this->info("Dispatched check jobs for period = {$period} min ({$targets->count()} targets).");
+        $this->info("Dispatched check jobs for period = {$interval} min ({$targets->count()} targets).");
     }
 }

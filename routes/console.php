@@ -17,6 +17,8 @@ ScheduleTarget::command('targets:check 3600')->everyMinute();
 
 ScheduleTarget::command('subscriptions-update')->dailyAt('01:07');
 
+//ScheduleTarget::command('monitor:start')->everyMinute();
+
 
 Artisan::command('set-command', function () {
     $telBot = \DefStudio\Telegraph\Models\TelegraphBot::find(1);
