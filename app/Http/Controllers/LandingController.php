@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\SendMailJetNotification;
 use App\Jobs\SendTelegramNotification;
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use Artesaos\SEOTools\Facades\SEOMeta;
 use Artesaos\SEOTools\Facades\OpenGraph;
@@ -25,7 +26,8 @@ class LandingController extends Controller
         JsonLd::setTitle('Laravel Support & Maintenance Services');
         JsonLd::setDescription('We provide expert Laravel maintenance, security, and development support.');
 
-        return view('landing.landing');
+//        return view('landing.landing');
+        return view('layouts.app-tlg');
     }
 
     public function contact(Request $request)

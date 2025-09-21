@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\LandingController;
 use Carbon\Carbon;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Facades\Route;
 
 //Route::view('/', 'welcome');
-Route::get('/', [\App\Http\Controllers\LandingController::class, 'index']);
+Route::get('/', [LandingController::class, 'index']);
 
 
 //Route::get('/foo', function (){
