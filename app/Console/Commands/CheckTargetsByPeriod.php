@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Target;
 use App\Jobs\CheckTargetJob;
+use Illuminate\Support\Facades\Log;
 
 class CheckTargetsByPeriod extends Command
 {

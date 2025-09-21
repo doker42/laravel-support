@@ -10,4 +10,6 @@ return [
 
     'control_log_enabled' => env('CONTROL_LOG_ENABLED', 1),
 
+    'new_logic'  => env('NEW_LOGIC', 1),
+
 ];
