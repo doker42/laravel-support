@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => config('admin.admin_prefix'), 'middleware' => ['auth'] ], function () {
 
+    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
     Route::post('/bot/toggle', [AdminController::class, 'toggle'])->name('bot.toggle');
 
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin');
