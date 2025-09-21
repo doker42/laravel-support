@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Events\TargetStatusChanged;
+use App\Helpers\LogHelper;
 use App\Models\Target;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -28,7 +29,7 @@ class RetryCheckTargetStatusJob implements ShouldQueue
     {
         $target = Target::find($this->targetId);
         if (! $target) {
-            Log::channel('checked_status')->warning("RetryCheckTargetStatusJob: target #{$this->id} not found");
+            Log::channel(LogHelper::CHANNEL_CHECKED_STATUS)->warning("RetryCheckTargetStatusJob: target #{$this->id} not found");
             return;
         }
 
@@ -49,7 +50,7 @@ class RetryCheckTargetStatusJob implements ShouldQueue
             $status = -1;
         }
 
-        Log::channel('checked_status')->info("Retry check for {$target->url}: {$status}");
+        Log::channel(LogHelper::CHANNEL_CHECKED_STATUS)->info("Retry check for {$target->url}: {$status}");
 
         $oldStatus = $target->last_status;
 

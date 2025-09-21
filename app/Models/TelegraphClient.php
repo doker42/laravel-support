@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 class TelegraphClient extends Model
 {
     protected $fillable = [
+        'telegraph_chat_id',
         'chat_id',
         'plan_id',
         'await',
@@ -45,6 +46,7 @@ class TelegraphClient extends Model
         if (!$tlgChat) {
             $bot = TelegraphBot::find(1);
             $chat = $bot->chats()->create([
+//                'telegraph_chat_id' => $tlgChat?->id,
                 'chat_id' => $chat_id,
                 'name'    => self::getChatName($chat),
                 'locale'  => 'en'
@@ -53,6 +55,7 @@ class TelegraphClient extends Model
 
         if (!$client) {
             $client = self::create([
+//                'telegraph_chat_id' => $tlgChat?->id,
                 'chat_id' => $chat_id,
                 'name'    => self::getChatName($chat),
                 'end_subscription' => Carbon::now()->addDays($planTestFree->duration)->format('Y-m-d'),
@@ -116,9 +119,14 @@ class TelegraphClient extends Model
         return $this->belongsTo(Plan::class);
     }
 
+//    public function targets()
+//    {
+//        return $this->hasMany(Target::class);
+//    }
+
     public function targets()
     {
-        return $this->hasMany(Target::class);
+        return $this->belongsToMany(Target::class, 'target_client', 'telegraph_client_id','target_id');
     }
 
 

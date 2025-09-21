@@ -6,5 +6,7 @@ return [
     'info' => 'ℹ️ Я бот - наглядач за сайтами.',
     'help' => 'Список команд:',
     'website' => '🌐 Вебсайт',
+    'The service is temporarily unavailable.' => 'The service is temporarily unavailable.',
+
 
 ];

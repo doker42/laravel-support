@@ -11,8 +11,6 @@ class StartCommand
 
     public function __invoke(TelegraphChat $chat): void
     {
-//        $chat->message("👋 Привет! Это команда /start")->send();
-
         app(MenuService::class)->startMenu($chat);
     }
 }

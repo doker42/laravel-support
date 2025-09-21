@@ -6,4 +6,6 @@ return [
     'info' => 'ℹ️ I am bot - site-watcher. I can control your site availability. If your site will down I will send you a message about it',
     'help' => 'List of commands:',
     'website' => '🌐 Website',
+    'The service is temporarily unavailable.' => 'The service is temporarily unavailable.',
+
 ];

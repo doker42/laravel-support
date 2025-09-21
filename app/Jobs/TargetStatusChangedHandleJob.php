@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Helpers\LogHelper;
 use App\Models\Target;
 use App\Models\TargetStatus;
 use App\Services\TelegramLogger;
@@ -36,13 +37,14 @@ class TargetStatusChangedHandleJob implements ShouldQueue
         $targetId = $this->targetId;
         $status   = $this->status;
         $target   = Target::find($targetId);
+
         $controlMessage = [
             'text'   => 'Control message',
             'message' => 'Default message',
         ];
 
         $lastStatus = TargetStatus::where('target_id', $targetId)->latest()->first();
-        $tlgChat    = TelegraphChat::find($target->telegraph_chat_id);
+//        $tlgChat    = TelegraphChat::find($target->telegraph_chat_id);
 
         if ($status === Target::STATUS_OK) {
 
@@ -56,7 +58,15 @@ class TargetStatusChangedHandleJob implements ShouldQueue
                     'message' => $target->url . ' is working again!',
                 ];
 
-                if ($tlgChat) $tlgChat->message($target->url . ' available again!')->send();
+//                if ($tlgChat) $tlgChat->message($target->url . ' available again!')->send();
+                $clientMessage = [
+                    'text'    => '🚀 ' . $target->url . ' available!' ,
+                    'message' => 'Status: ' . Target::getStatusText($status),
+                ];
+                $clientMessage = <<<HTML
+                    {$clientMessage['text']}!
+                    {$clientMessage['message']}
+                    HTML;
             }
         }
         else {
@@ -73,8 +83,21 @@ class TargetStatusChangedHandleJob implements ShouldQueue
                     'message' => $target->url . ' isn’t working!',
                 ];
 
-                if ($tlgChat) $tlgChat->message($target->url . ' unavailable!')->send();
+//                if ($tlgChat) $tlgChat->message($target->url . ' unavailable!')->send();
+                $clientMessage = [
+                    'text'    => $target->url . ' unavailable!' ,
+                    'message' => 'Status: ' . Target::getStatusText($status),
+                ];
+
+                $clientMessage = <<<HTML
+                    <b>ℹ️ {$clientMessage['text']}!</b>
+                    {$clientMessage['message']}
+                    HTML;
             }
+        }
+
+        if (isset($clientMessage)) {
+            $this->informClients($target, $clientMessage);
         }
 
         if (config('admin.control_monitoring')) {
@@ -82,6 +105,22 @@ class TargetStatusChangedHandleJob implements ShouldQueue
         }
     }
 
+
+    private function informClients(Target $target, $clientMessage): void
+    {
+        $clients = $target->clients()->wherePivot('active', 1)->get();
+
+        if (!count($clients)) {
+            return;
+        }
+
+        foreach ($clients as $client) {
+            $tlgChat = TelegraphChat::where('chat_id', $client->chat_id)->first();
+            if ($tlgChat) {
+                $tlgChat->html($clientMessage)->send();
+            }
+        }
+    }
 
     public function sendToTelegram($message): void
     {

@@ -2,13 +2,16 @@
 
 namespace App\Telegraph\Services;
 
+use App\Helpers\LogHelper;
 use App\Models\Target;
+use App\Models\TargetClient;
 use App\Models\TelegraphClient;
 use App\Services\TargetHttpStatusChecker;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Models\TelegraphBot;
 use DefStudio\Telegraph\Models\TelegraphChat;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TargetsService
@@ -49,13 +52,27 @@ class TargetsService
                 ]);
             }
 
-            $target = Target::create([
-                'telegraph_client_id' => $client->id,
-                'telegraph_chat_id'   => $tlgChat->id,
-                'url'    => $text,
-                'period' => Target::INTERVAL_DEFAULT,
-                'active' => 1,
-            ]);
+            $target = Target::where('url', $text)->first();
+
+            LogHelper::control('info', 'Added '.$target->url);
+
+            if ($target) {
+                TargetClient::create([
+                    'chat_id'    => $chat->chat_id,
+                    'target_id'  => $target->id,
+                    'telegraph_client_id' => $client->id,
+                    'active'     => 1,
+                ]);
+            }
+            else {
+                $target = Target::create([
+                    'telegraph_client_id' => $client->id,
+                    'telegraph_chat_id'   => $tlgChat->id,
+                    'url'    => $text,
+                    'period' => Target::INTERVAL_DEFAULT,
+                    'active' => 1,
+                ]);
+            }
 
             $message = $target ? 'Target was added' : 'Something wrong, try later';
             $client->setAwait(0);

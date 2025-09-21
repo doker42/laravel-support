@@ -34,10 +34,6 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Target extends Model
 {
-    public const INTERVAL_DEFAULT = 300;
-
-    public const STATUS_OK = 200;
-
     protected $fillable = [
         'telegraph_client_id',
         'telegraph_chat_id',
@@ -47,6 +43,18 @@ class Target extends Model
         'last_status',
         'last_checked_at',
         'active'
+    ];
+
+    public const INTERVAL_DEFAULT = 300;
+
+    public const STATUS_OK = 200;
+    public const STATUS_NETWORK_ERROR = -1;
+    public const STATUS_UNEXPECTED_ERROR = -2;
+
+    public const STATUSES = [
+        self::STATUS_NETWORK_ERROR    => 'network error',
+        self::STATUS_UNEXPECTED_ERROR => 'unexpected error',
+        self::STATUS_OK               => 'status 200',
     ];
 
     public function targetStatus(): HasMany
@@ -69,6 +77,11 @@ class Target extends Model
         return $this->belongsTo(TelegraphClient::class, 'telegraph_client_id', 'id');
     }
 
+
+    public function clients()
+    {
+        return $this->belongsToMany(TelegraphClient::class, 'target_client', 'target_id', 'telegraph_client_id');
+    }
 
     /**
      * Проверяет корректность URL.
@@ -110,6 +123,9 @@ class Target extends Model
     }
 
 
-
+    public static function getStatusText(string $key)
+    {
+        return self::STATUSES[$key];
+    }
 
 }

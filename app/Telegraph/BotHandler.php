@@ -2,6 +2,7 @@
 
 namespace App\Telegraph;
 
+use App\Models\Setting;
 use App\Models\TelegraphClient;
 use App\Telegraph\Commands\MenuCommand;
 use App\Telegraph\Commands\StartCommand;
@@ -9,6 +10,8 @@ use App\Telegraph\Commands\TargetsCommand;
 use App\Telegraph\Services\ProfileService;
 use App\Telegraph\Services\TargetsService;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
+use DefStudio\Telegraph\Models\TelegraphBot;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
@@ -18,6 +21,17 @@ use DefStudio\Telegraph\Keyboard\Keyboard;
 class BotHandler extends WebhookHandler
 {
     private ?TelegraphClient $client = null;
+
+    protected function handleMessage(): void
+    {
+        if (!Setting::botEnabled()) {
+            $this->reply("🚧 ". __('The service is temporarily unavailable.'));
+            return;
+        }
+
+        parent::handleMessage();
+    }
+
 
     protected function client(): ?TelegraphClient
     {
@@ -122,8 +136,7 @@ class BotHandler extends WebhookHandler
             return;
         }
 
-        Log::info($text->value());
-        $this->reply($text->value());
+        $this->reply('Input command');
     }
 
 

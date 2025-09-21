@@ -15,14 +15,15 @@ class SiteMonitorCommand extends Command
 
     public function handle()
     {
-        $targets = Target::where('active', 1)->get(['id', 'url']);
-        if ($targets->isEmpty()) {
+        $targets = Target::whereHas('clients', function ($query) {
+            $query->where('target_client.active', 1);
+        })->get(['id', 'url'])->toArray();
+
+        if (!count($targets)) {
             return;
         }
-        $targetsArray = $targets->toArray();
 
-        CheckSitesJob::dispatch($targetsArray)->onQueue('default');
-
+        CheckSitesJob::dispatch($targets)->onQueue('default');
 
         $message = "Check started " . count($targets) . " targets.";
         LogHelper::control('info', $message);

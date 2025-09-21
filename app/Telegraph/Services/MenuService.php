@@ -12,8 +12,6 @@ class MenuService
     use BotTrait;
     public function startMenu(TelegraphChat $chat): void
     {
-//        $chat->message("📋 Главное меню")->send();
-
         $keyboard = Keyboard::make()
             ->row([
                 Button::make($this->t('info'))->action('info'),

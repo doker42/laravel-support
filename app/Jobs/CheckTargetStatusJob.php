@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Helpers\LogHelper;
 use App\Models\Target;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -55,10 +56,10 @@ class CheckTargetStatusJob implements ShouldQueue
             } else {
                 // это ошибка (RequestException или ConnectionException)
                 $newStatus = -1;
-                Log::channel('checked_status')->warning("Connection error for {$url}: " . ($response?->getMessage() ?? 'Unknown error'));
+                Log::channel(LogHelper::CHANNEL_CHECKED_STATUS)->warning("Connection error for {$url}: " . ($response?->getMessage() ?? 'Unknown error'));
             }
 
-            Log::channel('checked_status')->info("Checked {$url} -> {$newStatus} (was {$oldStatus})");
+            Log::channel(LogHelper::CHANNEL_CHECKED_STATUS)->info("Checked {$url} -> {$newStatus} (was {$oldStatus})");
 
             if ($oldStatus !== $newStatus) {
 //                $retries[] = ['id' => $id, 'url' => $url, 'oldStatus' => $oldStatus];

@@ -37,7 +37,7 @@ class RetrySingleCheckJob implements ShouldQueue
     {
         $target = Target::find($this->id);
 
-        if (! $target) {
+        if (!$target) {
             Log::channel('status_error')
                 ->warning("RetrySingleCheckJob: target #{$this->id} not found");
             return;
@@ -84,66 +84,17 @@ class RetrySingleCheckJob implements ShouldQueue
 
         $oldStatus = $target->last_status;
 
-        $message = "Retry check for {$target->url}: status {$status} (was {$oldStatus})";
-        LogHelper::control('info', $message);
+        LogHelper::control('info', "Retry check for {$target->url}: status {$status} (was {$oldStatus})");
 
         if ($status !== $oldStatus) {
-            $target->update([
-                'last_status'     => $status,
-                'last_checked_at' => now(),
-            ]);
-
             TargetStatusChangedHandleJob::dispatch($target->id, $status)
                 ->onQueue('low');
         }
-    }
 
-
-    public function handleOld(): void
-    {
-        $target = Target::find($this->id);
-
-        if (! $target) {
-            Log::channel('checked_status')
-                ->warning("RetrySingleCheckJob: target #{$this->id} not found");
-            return;
-        }
-
-        $status = 0;
-
-        // до 2 попыток проверки (в т.ч. если статус != 200)
-        for ($i = 1; $i <= 2; $i++) {
-            try {
-                $response = Http::timeout(7)->get($target->url);
-                $status = $response->status();
-
-                if ($status === 200) {
-                    break;
-                }
-
-                // если не 200 → ждём немного и пробуем снова
-                usleep(200_000); // 200 мс
-
-            } catch (\Throwable $e) {
-                $status = -1; // network error
-                Log::info("RetrySingleCheckJob: {$target->url} attempt {$i} error: {$e->getMessage()}");
-                usleep(200_000);
-            }
-        }
-
-        Log::channel('checked_status')->info("Retry check for {$target->url}: {$status}");
-
-        $oldStatus = $target->last_status;
-
-        Log::channel('checked_status')->info("Retry check for {$target->url}: status {$status} __ old_status {$oldStatus}");
-        
-        if ($status !== $oldStatus) {
-            $target->update([
-                'last_status'     => $status,
-                'last_checked_at' => now(),
-            ]);
-
-            TargetStatusChangedHandleJob::dispatch($target->id, $status)->onQueue('low');
-        }
+        $target->update([
+            'previous_status' => $oldStatus,
+            'last_status'     => $status,
+            'last_checked_at' => now(),
+        ]);
     }
 }

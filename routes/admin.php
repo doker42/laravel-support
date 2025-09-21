@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\PlanController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TargetController;
 use App\Http\Controllers\Admin\TelegraphClientController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::group(['prefix' => config('admin.admin_prefix'), 'middleware' => ['auth'] ], function () {
+
+    Route::post('/bot/toggle', [AdminController::class, 'toggle'])->name('bot.toggle');
 
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin');
 
@@ -50,6 +53,18 @@ Route::group(['prefix' => config('admin.admin_prefix'), 'middleware' => ['auth']
             Route::delete('/destroy/{client}', 'destroy')->name('client_destroy');
         });
     });
+    Route::group(['prefix' => 'settings'], function () {
+        Route::controller( SettingController::class)->group(function () {
+            Route::get('/', 'index')->name('setting_list');
+            Route::get('/create', 'create')->name('setting_create');
+            Route::post('/store', 'store')->name('setting_store');
+            Route::get('/show/{setting}', 'show')->name('setting_show');
+            Route::get('/edit/{setting}', 'edit')->name('setting_edit');
+            Route::post('/update/{setting}', 'update')->name('setting_update');
+            Route::delete('/destroy/{setting}', 'destroy')->name('setting_destroy');
+        });
+    });
+
 //    Route::group(['prefix' => 'settings'], function () {
 //        Route::controller( AdminSettingController::class)->group(function () {
 //            Route::get('/list', 'index')->name('admin_setting_list');
