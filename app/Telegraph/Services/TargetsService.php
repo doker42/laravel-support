@@ -54,8 +54,6 @@ class TargetsService
 
             $target = Target::where('url', $text)->first();
 
-            LogHelper::control('info', 'Added '.$target->url);
-
             if ($target) {
                 TargetClient::create([
                     'chat_id'    => $chat->chat_id,
@@ -78,6 +76,8 @@ class TargetsService
             $client->setAwait(0);
 
             $chat->message($message)->send();
+
+            LogHelper::control('info', $message .'  Url: '. $target?->url);
         }
         else {
             $message = $result['message'];
