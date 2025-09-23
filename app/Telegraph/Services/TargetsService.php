@@ -113,7 +113,9 @@ class TargetsService
     {
         $target = Target::find($targetId);
 
-        if ($target->telegraph_client_id !== $client->id) {
+        $clientsIdsArr = $target->clients()->pluck('telegraph_client_id')->toArray();
+
+        if (count($clientsIdsArr) && !in_array($client->id, $clientsIdsArr)) {
             $chat->message('You dont have access to this target!')
                 ->send();
             return;
