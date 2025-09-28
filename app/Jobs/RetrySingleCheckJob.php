@@ -46,7 +46,7 @@ class RetrySingleCheckJob implements ShouldQueue
         // до 2 попыток проверки (в т.ч. если статус != 200)
         for ($i = 1; $i <= 2; $i++) {
             try {
-                $response = Http::timeout(7)
+                $response = Http::timeout(15)
                     ->withHeaders([
                         'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                     ])

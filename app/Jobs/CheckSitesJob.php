@@ -35,7 +35,7 @@ class CheckSitesJob implements ShouldQueue
             ->toArray();
 
         $client = new Client([
-            'timeout' => 5,
+            'timeout' => 10,
             'allow_redirects' => true,
             'http_errors' => false, // не кидать исключения на 4xx/5xx
             'headers' => [

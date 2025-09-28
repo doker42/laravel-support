@@ -37,10 +37,10 @@ class TargetHttpStatusChecker
                 /** to Telegram chat messaging */
                 $this->sendToTelegram([
                     'text' => 'Resource available again',
-                    'message' => $target->url . ' is working again!',
+                    'message' => $target->url . ' is working again!!!',
                 ]);
 
-                if ($tlgChat) $tlgChat->message($target->url . ' available again!')->send();
+                if ($tlgChat) $tlgChat->message($target->url . ' available again!!!')->send();
             }
         } else {
             if (!$lastStatus || $lastStatus->start_date) {
@@ -51,10 +51,10 @@ class TargetHttpStatusChecker
 
                 $this->sendToTelegram([
                     'text' => 'Resource unavailable',
-                    'message' => $target->url . ' isn’t working!',
+                    'message' => $target->url . ' isn’t working!!!',
                 ]);
 
-                if ($tlgChat) $tlgChat->message($target->url . ' unavailable!')->send();
+                if ($tlgChat) $tlgChat->message($target->url . ' unavailable!!!')->send();
             }
         }
     }

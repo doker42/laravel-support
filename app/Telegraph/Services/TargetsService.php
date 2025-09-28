@@ -168,4 +168,27 @@ class TargetsService
         $resultMessage = TargetHttpStatusChecker::checkUrlStatus($target->url);
         $chat->message($resultMessage)->send();
     }
+//
+//
+//    public function testDownMessage(TelegraphChat $chat, $targetId)
+//    {
+//        $target = Target::find($targetId);
+//        $resultMessage = TargetHttpStatusChecker::checkUrlStatus($target->url);
+//        $chat->message($resultMessage)->send();
+//    }
+//
+//    public function testupmsg(TelegraphChat $chat, $targetId)
+//    {
+//        $target = Target::find($targetId);
+//        $clientMessage = [
+//            'text'    => '🚀 ' . $target->url . ' available!' ,
+//            'message' => 'Status: ' . Target::getStatusText(Target::STATUS_OK),
+//        ];
+//        $clientMessage = <<<HTML
+//                    {$clientMessage['text']}!
+//                    {$clientMessage['message']}
+//                    HTML;
+//
+//        $chat->html($clientMessage)->send();
+//    }
 }

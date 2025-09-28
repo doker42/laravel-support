@@ -54,7 +54,7 @@ class Target extends Model
     public const STATUSES = [
         self::STATUS_NETWORK_ERROR    => 'network error',
         self::STATUS_UNEXPECTED_ERROR => 'unexpected error',
-        self::STATUS_OK               => 'status 200',
+        self::STATUS_OK               => ' 200',
     ];
 
     public function targetStatus(): HasMany
