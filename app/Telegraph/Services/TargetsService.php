@@ -7,11 +7,11 @@ use App\Models\Target;
 use App\Models\TargetClient;
 use App\Models\TelegraphClient;
 use App\Services\TargetHttpStatusChecker;
+use App\Services\TargetStatusService;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Models\TelegraphBot;
 use DefStudio\Telegraph\Models\TelegraphChat;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TargetsService
@@ -141,7 +141,30 @@ class TargetsService
             Button::make('Check status ' . $target->url)->action('checkstatus')->param('target_id', $target->id),
         ]);
 
+        // Get status with period selection
+        $keyboard->row([
+            Button::make('Get status ' . $target->url)->action('select_period')->param('target_id', $target->id),
+        ]);
+
+
         $chat->message('Choose target action from list')
+            ->keyboard($keyboard)
+            ->send();
+    }
+
+
+    public function selectPeriod(TelegraphChat $chat, $targetId)
+    {
+        $keyboard = Keyboard::make();
+
+        $periods = [7, 30, 60];
+        foreach ($periods as $days) {
+            $keyboard->row([
+                Button::make($days . ' days')->action('get_statistic')->param('target_id', $targetId)->param('days', $days),
+            ]);
+        }
+
+        $chat->message('Select period for status:')
             ->keyboard($keyboard)
             ->send();
     }
@@ -168,6 +191,47 @@ class TargetsService
         $resultMessage = TargetHttpStatusChecker::checkUrlStatus($target->url);
         $chat->message($resultMessage)->send();
     }
+
+
+    public function getStatistic(TelegraphChat $chat, $targetId, int $days)
+    {
+        $target = Target::find($targetId);
+        $targetStatuses = TargetStatusService::statusesByDays($target, $days);
+
+        $statuses = [];
+
+        foreach ($targetStatuses as $targetStatus) {
+
+            if ($targetStatus['start'] && $targetStatus['stop']) {
+                $diff = $targetStatus['start']->diff($targetStatus['stop']);
+                $statuses[] = sprintf(
+                    "❌ from <b>%s</b> to <b>%s</b> (⏱ %s)",
+                    $targetStatus['start'],
+                    $targetStatus['stop'],
+                    $diff->format('%h:%I')
+                );
+            } elseif ($targetStatus['stop'] && !$targetStatus['start']) {
+                $statuses[] = sprintf(
+                    "❌ Was offline until <b>%s</b> (doesn’t work)",
+                    $targetStatus['stop']
+                );
+            }
+        }
+
+        $message = <<<HTML
+            <b>ℹ️ Target Down Statistic</b>
+            HTML;
+
+        if (!empty($statuses)) {
+            $message .= "\n\n" . implode("\n", $statuses);
+        } else {
+            $message .= "\n\n✅ No downtime recorded.";
+        }
+
+        $chat->message($message)->send();
+    }
+
+
 //
 //
 //    public function testDownMessage(TelegraphChat $chat, $targetId)

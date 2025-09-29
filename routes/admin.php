@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TargetClientController;
 use App\Http\Controllers\Admin\TargetController;
 use App\Http\Controllers\Admin\TelegraphClientController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,20 @@ Route::group(['prefix' => config('admin.admin_prefix'), 'middleware' => ['auth']
             Route::get('/edit/{target}', 'edit')->name('target_edit');
             Route::post('/update/{target}', 'update')->name('target_update');
             Route::delete('/destroy/{target}', 'destroy')->name('target_destroy');
+        });
+    });
+    Route::group(['prefix' => 'target-client'], function () {
+        Route::controller( TargetClientController::class)->group(function () {
+            Route::get('/', 'index')->name('target_client_list');
+//            Route::get('/create', 'create')->name('target_create');
+//            Route::post('/store', 'store')->name('target_store');
+            Route::get('/show/{targetClient}', 'show')->name('target_client_show');
+            Route::get('/edit/{targetClient}', 'edit')->name('target_client_edit');
+            Route::post('/update/{targetClient}', 'update')->name('target_client_update');
+//            Route::delete('/destroy/{target}', 'destroy')->name('target_destroy');
+            Route::post('/toggle-active/{targetClient}', 'toggleActive')
+                ->name('target_client_toggle_active');
+
         });
     });
     Route::group(['prefix' => 'plans'], function () {

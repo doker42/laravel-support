@@ -20,6 +20,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2" href="{{route('target_client_list')}}">
+                        <svg class="bi"><use xlink:href="#people"/></svg>
+                        {{__('TargetClients')}}
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link d-flex align-items-center gap-2" href="{{route('plan_list')}}">
                         <svg class="bi"><use xlink:href="#people"/></svg>
                         {{__('Plans')}}

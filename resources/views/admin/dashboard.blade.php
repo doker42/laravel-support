@@ -12,5 +12,7 @@
         @endif
     </form>
 
+    @stack('scripts')
+
 @endsection
 

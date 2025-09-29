@@ -100,7 +100,7 @@ class TargetStatusChangedHandleJob implements ShouldQueue
             $this->informClients($target, $clientMessage);
         }
 
-        if (config('admin.control_monitoring')) {
+        if (config('admin.control_log_enabled')) {
             $this->sendToTelegram($controlMessage);
         }
     }

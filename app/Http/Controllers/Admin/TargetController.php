@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Target;
+use App\Services\TargetStatusService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -59,26 +60,7 @@ class TargetController extends Controller
     {
         if ($target) {
             $periods = config('target.periods');
-            $targetStatuses = $target->targetStatus;
-            $statuses = [];
-
-            foreach ($targetStatuses as $targetStatus) {
-                if ($targetStatus->start_date && $targetStatus->stop_date) {
-
-                    $diff = $targetStatus->start_date->diff($targetStatus->stop_date);
-                    $statuses[] = [
-                        'stop'  => $targetStatus->stop_date,
-                        'start' => $targetStatus->start_date,
-                        'downtime' => $diff->format('%h:%I'),
-                    ];
-                } elseif (!$targetStatus->start_date && $targetStatus->stop_date) {
-                    $statuses[] = [
-                        'stop'  => $targetStatus->stop_date,
-                        'start' => $targetStatus->start_date,
-                        'downtime' => 'doesnt work',
-                    ];
-                }
-            }
+            $statuses = TargetStatusService::statusesAll($target);
 
             return view('admin.targets.show', ['target' => $target, 'periods' => $periods, 'statuses' => $statuses]);
         }

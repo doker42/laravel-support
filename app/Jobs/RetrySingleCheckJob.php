@@ -84,7 +84,9 @@ class RetrySingleCheckJob implements ShouldQueue
 
         $oldStatus = $target->last_status;
 
-        LogHelper::control('info', "Retry check for {$target->url}: status {$status} (was {$oldStatus})");
+        $message = "Retry check for {$target->url}: status changed {$status} (was {$oldStatus})";
+//        LogHelper::control('info', "Retry check for {$target->url}: status {$status} (was {$oldStatus})");
+        Log::channel(LogHelper::CHANNEL_CHECKED_STATUS)->info($message);
 
         if ($status !== $oldStatus) {
             TargetStatusChangedHandleJob::dispatch($target->id, $status)

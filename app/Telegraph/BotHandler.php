@@ -107,6 +107,19 @@ class BotHandler extends WebhookHandler
         app(TargetsService::class)->checkstatus($this->chat, $targetId);
     }
 
+    public function select_period(): void
+    {
+        $targetId = $this->data->get('target_id');
+        app(TargetsService::class)->selectPeriod($this->chat, $targetId);
+    }
+
+    public function get_statistic(): void
+    {
+        $targetId = $this->data->get('target_id');
+        $days = $this->data->get('days');
+        app(TargetsService::class)->getStatistic($this->chat, $targetId, $days);
+    }
+
     public function profile(): void
     {
         app(ProfileService::class)->show($this->chat, $this->client());

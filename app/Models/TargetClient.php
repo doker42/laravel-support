@@ -15,4 +15,13 @@ class TargetClient extends Model
 
     protected $table = 'target_client';
 
+    public function target()
+    {
+        return $this->belongsTo(Target::class);
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(TelegraphClient::class, 'telegraph_client_id', 'id');
+    }
 }
