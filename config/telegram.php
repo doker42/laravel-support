@@ -1,7 +1,5 @@
 <?php
 
-use App\Helpers\TelegramConst;
-
 return [
   /*
   |--------------------------------------------------------------------------
@@ -88,25 +86,6 @@ return [
     ],
 
 
-
-    /*
-     *
-     *  actions for people
-     *
-     *
-     *
-     *
-     */
-
-    'actions' => [
-        'people' => [
-            TelegramConst::WEBHOOK_PEOPLE_ACTION_ASSIST,
-            TelegramConst::WEBHOOK_PEOPLE_ACTION_PROJECTS,
-            TelegramConst::WEBHOOK_PEOPLE_ACTION_PROJECT,
-//            TelegramConst::WEBHOOK_PEOPLE_ACTION_SURVEYS,
-            TelegramConst::WEBHOOK_PEOPLE_ACTION_SEARCH,
-        ]
-    ],
 
   /*
   |--------------------------------------------------------------------------
@@ -274,29 +253,5 @@ return [
 //      'SredaErrorTest'  => '-1001937609571',
 
   ],
-
-    /*
-    |
-    |   COSTYL FOR  TELEGRAM
-    |
-    |   Keyboard Buttons
-    |
-    |
-    |
-    |
-     */
-
-    'keyboard' => [
-        TelegramConst::WEBHOOK_MSG_ACT_ASSIST => [
-            'AI Assistant',
-            'AI Ассистент',
-            'AI Помічник',
-        ],
-        TelegramConst::WEBHOOK_MSG_ACT_PROJECTS => [
-            '<= Back',
-            '<= К проектам',
-            '<= До проектів',
-        ]
-    ]
 
 ];
