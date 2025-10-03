@@ -62,10 +62,22 @@
                                 </div>
                             </div>
                             {{-- INTERVAL --}}
-                            <div class="col-sm-3 mb-3">
+{{--                            <div class="col-sm-3 mb-3">--}}
+{{--                                <div class="form-group">--}}
+{{--                                    <label>{{__('Interval')}}</label>--}}
+{{--                                    <input name="interval" type="number" class="form-control" value="{{$plan->interval}}" required>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+                            {{-- PLAN --}}
+                            <div class="col-sm-6 mb-3">
                                 <div class="form-group">
-                                    <label>{{__('Interval')}}</label>
-                                    <input name="interval" type="number" class="form-control" value="{{$plan->interval}}" required>
+                                    <label>{{__('Intervals')}}</label>
+                                    <select class="form-select" name="intervals" id="intervals" >
+{{--                                        <option value="{{$client->plan->id}}" selected>{{$client->plan->title}}</option>--}}
+                                        @foreach($intervals as $key => $val)
+                                            <option value="{{$key}}">{{$key}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             {{-- Duration --}}
@@ -77,12 +89,8 @@
                             </div>
                         </div>
 
-
-
-
-
                         {{-- ACTIVE --}}
-                        <div class="col-sm-6">
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label>{{__('Active')}}</label>
                                 <div class="form-check form-switch mt-2">
@@ -92,6 +100,21 @@
                                            {{$plan->active ? 'checked' : ''}}
                                     >
                                     <label class="form-check-label" for="active">{{__('Active status')}}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                       {{-- DEFAULT --}}
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>{{__('Default')}}</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input id="default" name="default"
+                                           class="form-check-input"
+                                           type="checkbox" role="switch"
+                                            {{$plan->default ? 'checked' : ''}}
+                                    >
+                                    <label class="form-check-label" for="default">{{__('Default plan')}}</label>
                                 </div>
                             </div>
                         </div>

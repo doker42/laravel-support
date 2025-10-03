@@ -45,9 +45,15 @@ class Target extends Model
         'active'
     ];
 
+    public const INTERVAL_60 = 60;
+    public const INTERVAL_300 = 300;
+    public const INTERVAL_600 = 600;
+    public const INTERVAL_1800 = 1800;
+    public const INTERVAL_3600 = 3600;
     public const INTERVAL_DEFAULT = 300;
 
     public const STATUS_OK = 200;
+    public const STATUS_404 = 404;
     public const STATUS_NETWORK_ERROR = -1;
     public const STATUS_UNEXPECTED_ERROR = -2;
 
@@ -55,6 +61,7 @@ class Target extends Model
         self::STATUS_NETWORK_ERROR    => 'network error',
         self::STATUS_UNEXPECTED_ERROR => 'unexpected error',
         self::STATUS_OK               => ' 200',
+        self::STATUS_404              => ' 404',
     ];
 
     public function targetStatus(): HasMany
@@ -125,7 +132,9 @@ class Target extends Model
 
     public static function getStatusText(string $key)
     {
-        return self::STATUSES[$key];
+       return !empty(self::STATUSES[$key])
+            ? self::STATUSES[$key]
+            : $key;
     }
 
 }

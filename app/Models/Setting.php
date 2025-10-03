@@ -17,6 +17,7 @@ class Setting extends Model
 
     public const BOT_ENABLED = 'bot_enabled';
     public const CONTROL_LOG_ENABLED = 'control_log_enabled';
+    public const CLIENT_INFORM_ENABLED = 'client_inform_enabled';
 
     public static function get(string $key, $default = null)
     {
@@ -40,4 +41,8 @@ class Setting extends Model
         return self::where('key', self::CONTROL_LOG_ENABLED)->first()->value ?? $default;
     }
 
+    public static function clientInformEnabled($default = null)
+    {
+        return self::where('key', self::CLIENT_INFORM_ENABLED)->first()->value ?? $default;
+    }
 }

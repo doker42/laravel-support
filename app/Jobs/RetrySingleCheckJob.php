@@ -2,12 +2,11 @@
 
 namespace App\Jobs;
 
-//use Illuminate\Contracts\Queue\ShouldQueue;
 //use Illuminate\Foundation\Queue\Queueable;
 
-use App\Events\TargetStatusChanged;
 use App\Helpers\LogHelper;
 use App\Models\Target; // твоя модель с урлами
+use App\Services\TargetHttpStatusChecker;
 use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -38,18 +37,18 @@ class RetrySingleCheckJob implements ShouldQueue
         $target = Target::find($this->id);
 
         if (!$target) {
-            Log::channel('status_error')
+            Log::channel('target_error')
                 ->warning("RetrySingleCheckJob: target #{$this->id} not found");
             return;
         }
 
+        $errorInfo = null;
+
         // до 2 попыток проверки (в т.ч. если статус != 200)
         for ($i = 1; $i <= 2; $i++) {
             try {
-                $response = Http::timeout(15)
-                    ->withHeaders([
-                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                    ])
+                $response = Http::timeout(5)
+                    ->withHeaders(TargetHttpStatusChecker::CHECK_HEADERS)
                     ->get($target->url);
 
                 // Сервер ответил — получаем HTTP-код
@@ -65,18 +64,18 @@ class RetrySingleCheckJob implements ShouldQueue
             } catch (ConnectionException $e) {
                 // Network errors (DNS, timeout, SSL)
                 $status = -1;
-
+                $errorInfo = $e->getMessage();
                 $message = "RetrySingleCheckJob: {$target->url} attempt {$i} network error: {$e->getMessage()}";
-                LogHelper::control('warning', $message);
+                Log::channel(LogHelper::CHANNEL_TARGET_ERROR)->info($message);
 
                 usleep(200_000);
 
             } catch (\Throwable $e) {
                 // any errors
                 $status = -2;
-
+                $errorInfo = $e->getMessage();
                 $message = "RetrySingleCheckJob: {$target->url} attempt {$i} unexpected error: {$e->getMessage()}";
-                LogHelper::control('error', $message);
+                Log::channel(LogHelper::CHANNEL_TARGET_ERROR)->info($message);
 
                 break;
             }
@@ -84,13 +83,13 @@ class RetrySingleCheckJob implements ShouldQueue
 
         $oldStatus = $target->last_status;
 
-        $message = "Retry check for {$target->url}: status changed {$status} (was {$oldStatus})";
-//        LogHelper::control('info', "Retry check for {$target->url}: status {$status} (was {$oldStatus})");
-        Log::channel(LogHelper::CHANNEL_CHECKED_STATUS)->info($message);
-
         if ($status !== $oldStatus) {
-            TargetStatusChangedHandleJob::dispatch($target->id, $status)
+
+            TargetStatusChangedHandleJob::dispatch($target->id, $status, $errorInfo)
                 ->onQueue('low');
+
+            $message = "Retry check for {$target->url}: status changed, now {$status} (was {$oldStatus})";
+            Log::channel(LogHelper::CHANNEL_RETRY_CHECK)->info($message);
         }
 
         $target->update([

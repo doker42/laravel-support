@@ -65,10 +65,21 @@
                             </div>
                         </div>
                         {{-- INTERVAL --}}
+{{--                        <div class="col-sm-3 mb-3">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label>{{__('Interval')}}</label>--}}
+{{--                                <input name="interval" type="number" class="form-control" value="{{old('interval')}}" required>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                         <div class="col-sm-3 mb-3">
                             <div class="form-group">
-                                <label>{{__('Interval')}}</label>
-                                <input name="interval" type="number" class="form-control" value="{{old('interval')}}" required>
+                                <label>{{__('Intervals')}}</label>
+                                <select class="form-select" name="intervals" id="intervals" >
+                                    {{--                                        <option value="{{$client->plan->id}}" selected>{{$client->plan->title}}</option>--}}
+                                    @foreach($intervals as $key => $val)
+                                        <option value="{{$key}}">{{$key}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -78,6 +89,12 @@
                             <div class="form-check form-switch">
                                 <input name="active" class="form-check-input" type="checkbox" id="active">
                                 <label class="form-check-label" for="active">Active</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 mb-3">
+                            <div class="form-check form-switch">
+                                <input name="default" class="form-check-input" type="checkbox" id="default">
+                                <label class="form-check-label" for="default">Default</label>
                             </div>
                         </div>
                     </div>

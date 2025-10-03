@@ -59,7 +59,8 @@ class TargetClientController extends Controller
     {
         if ($targetClient) {
 
-            $intervals = config('target.intervals');
+            $intervals = $targetClient->client?->plan?->intervals;
+            $intervals = !empty($intervals) ? json_decode($intervals) : null;
 
             return view('admin.target-client.edit', ['targetClient' => $targetClient, 'intervals' => $intervals]);
         }

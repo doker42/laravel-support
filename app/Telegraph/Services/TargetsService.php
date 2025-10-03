@@ -7,11 +7,13 @@ use App\Models\Target;
 use App\Models\TargetClient;
 use App\Models\TelegraphClient;
 use App\Services\TargetHttpStatusChecker;
-use App\Services\TargetStatusService;
+use App\Services\TargetStatisticService;
+use App\Telegraph\ClientMessages;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Models\TelegraphBot;
 use DefStudio\Telegraph\Models\TelegraphChat;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Stringable;
 
 class TargetsService
@@ -32,57 +34,60 @@ class TargetsService
     public function addTarget(TelegraphChat $chat, TelegraphClient $client, Stringable $text): void
     {
         if (!$client->checkPlanLimit()) {
-            $message = 'Trial limit achieved ('. $client->plan->limit . ' target).';
-            $chat->message($message)->send();
+            $chat->message('Your plan limit achieved (' . $client->plan->limit . ' target).')->send();
+            return;
+        }
+
+        $isTargetClient = TargetClient::exists($text, $client);
+
+        if ($isTargetClient) {
+            $chat->message('Target already exists')->send();
             return;
         }
 
         $result = TargetHttpStatusChecker::checkUrlComplex($text);
 
-        if ($result['status']) {
+        if (!$result['status']) {
+            $chat->message($result['message'])->send();
+            return;
+        }
 
-            $tlgChat = TelegraphChat::where('chat_id', $chat->chat_id)->first();
-            if (!$tlgChat) {
-                $bot = TelegraphBot::find(1);
-                $tlgChat = $bot->chats()->create([
-                    'chat_id' => $chat->chat_id,
-                    'name'    => $chat->name,
-                    'locale'  => 'en',
-                    'bot_id'  => 1
-                ]);
-            }
+        DB::transaction(function () use ($chat, $client, $text) {
 
-            $target = Target::where('url', $text)->first();
+            $tlgChat = TelegraphChat::firstOrCreate(
+                ['chat_id' => $chat->chat_id],
+                [
+                    'name'   => $chat->name,
+                    'locale' => 'en',
+                    'bot_id' => 1
+                ]
+            );
 
-            if ($target) {
-                TargetClient::create([
-                    'chat_id'    => $chat->chat_id,
-                    'target_id'  => $target->id,
-                    'telegraph_client_id' => $client->id,
-                    'active'     => 1,
-                ]);
-            }
-            else {
-                $target = Target::create([
+            $target = Target::firstOrCreate(
+                ['url' => $text],
+                [
                     'telegraph_client_id' => $client->id,
                     'telegraph_chat_id'   => $tlgChat->id,
-                    'url'    => $text,
-                    'period' => Target::INTERVAL_DEFAULT,
-                    'active' => 1,
-                ]);
-            }
+                    'period'              => Target::INTERVAL_DEFAULT,
+                    'active'              => 1,
+                ]
+            );
 
-            $message = $target ? 'Target was added' : 'Something wrong, try later';
+            TargetClient::firstOrCreate(
+                [
+                    'chat_id'              => $chat->chat_id,
+                    'target_id'            => $target->id,
+                    'telegraph_client_id'  => $client->id,
+                ],
+                ['active' => 1]
+            );
+
             $client->setAwait(0);
 
-            $chat->message($message)->send();
+            $chat->message('Target was added')->send();
+            LogHelper::control('info', 'Target was added  Url: ' . $target->url);
 
-            LogHelper::control('info', $message .'  Url: '. $target?->url);
-        }
-        else {
-            $message = $result['message'];
-            $chat->message($message)->send();
-        }
+        }, 2);
     }
 
 
@@ -112,6 +117,12 @@ class TargetsService
     public function control(TelegraphChat $chat, $targetId, TelegraphClient $client)
     {
         $target = Target::find($targetId);
+        $targetClient = TargetClient::get($targetId, $client->id);
+        if (!$target || !$targetClient) {
+            $chat->message('Sorry, there is wrong data!')
+                ->send();
+            return;
+        }
 
         $clientsIdsArr = $target->clients()->pluck('telegraph_client_id')->toArray();
 
@@ -124,28 +135,34 @@ class TargetsService
         $keyboard = Keyboard::make();
 
         $keyboard->row([
+            Button::make('Set Interval ' . $target->url)->action('set_interval')->param('target_id', $target->id),
+        ]);
+
+        $keyboard->row([
             Button::make('Delete ' . $target->url)->action('delete')->param('target_id', $target->id),
         ]);
 
-        if ($target->active) {
+        if ($targetClient->active) {
             $keyboard->row([
-                Button::make('Stop watch ' . $target->url)->action('stopwatch')->param('target_id', $target->id),
+                Button::make('Stop watch ' . $target->url)->action('stop_watch')->param('target_id', $target->id),
             ]);
         } else {
             $keyboard->row([
-                Button::make('Start watch ' . $target->url)->action('startwatch')->param('target_id', $target->id),
+                Button::make('Start watch ' . $target->url)->action('start_watch')->param('target_id', $target->id),
             ]);
         }
 
         $keyboard->row([
-            Button::make('Check status ' . $target->url)->action('checkstatus')->param('target_id', $target->id),
+            Button::make('Check target status')->action('check_status')->param('target_id', $target->id),
         ]);
 
-        // Get status with period selection
         $keyboard->row([
-            Button::make('Get status ' . $target->url)->action('select_period')->param('target_id', $target->id),
+            Button::make('Get target statistic')->action('select_period')->param('target_id', $target->id),
         ]);
 
+        $keyboard->row([
+            Button::make('Get test down message')->action('test_down_message')->param('target_id', $target->id),
+        ]);
 
         $chat->message('Choose target action from list')
             ->keyboard($keyboard)
@@ -170,16 +187,49 @@ class TargetsService
     }
 
 
-    public function delete(TelegraphChat $chat, $targetId)
+    public function setInterval(TelegraphChat $chat, $targetId, TelegraphClient $client)
     {
-        Target::destroy($targetId);
+        $intervals = json_decode($client->plan->intervals);
+
+        $keyboard = Keyboard::make();
+
+        foreach ($intervals as $interval) {
+            $keyboard->row([
+                Button::make($interval . ' sec.')
+                ->action('store_interval')
+                ->param('target_id', $targetId)
+                ->param('interval', $interval),
+            ]);
+        }
+
+        $chat->message('Choose interval')
+            ->keyboard($keyboard)
+            ->send();
+    }
+
+
+    public function storeInterval(TelegraphChat $chat, $targetId, TelegraphClient $client, $interval)
+    {
+        $targetClient = TargetClient::get($targetId, $client->id);
+        $targetClient->update([
+            'interval' => $interval
+        ]);
+        $chat->message("Target interval set " . $interval)->send();
+    }
+
+
+    public function delete(TelegraphChat $chat, $targetId, TelegraphClient $client)
+    {
+        $telegraphClientId = $client->id;
+        TargetClient::remove($targetId, $telegraphClientId);
         $chat->message("Target was deleted")->send();
     }
 
 
-    public function setActive(TelegraphChat $chat, $targetId, bool $active)
+    public function setActive(TelegraphChat $chat, $targetId, TelegraphClient $client, bool $active)
     {
-        Target::setActive($targetId, $active);
+        $clientId = $client->id;
+        TargetClient::setActive($targetId, $clientId, $active);
         $status = $active ? ' active' : ' inactive';
         $chat->message("Target set " . $status)->send();
     }
@@ -193,66 +243,20 @@ class TargetsService
     }
 
 
-    public function getStatistic(TelegraphChat $chat, $targetId, int $days)
+    public function getStatistic(TelegraphChat $chat, $targetId, int $days): void
     {
         $target = Target::find($targetId);
-        $targetStatuses = TargetStatusService::statusesByDays($target, $days);
-
-        $statuses = [];
-
-        foreach ($targetStatuses as $targetStatus) {
-
-            if ($targetStatus['start'] && $targetStatus['stop']) {
-                $diff = $targetStatus['start']->diff($targetStatus['stop']);
-                $statuses[] = sprintf(
-                    "❌ from <b>%s</b> to <b>%s</b> (⏱ %s)",
-                    $targetStatus['start'],
-                    $targetStatus['stop'],
-                    $diff->format('%h:%I')
-                );
-            } elseif ($targetStatus['stop'] && !$targetStatus['start']) {
-                $statuses[] = sprintf(
-                    "❌ Was offline until <b>%s</b> (doesn’t work)",
-                    $targetStatus['stop']
-                );
-            }
-        }
-
-        $message = <<<HTML
-            <b>ℹ️ Target Down Statistic</b>
-            HTML;
-
-        if (!empty($statuses)) {
-            $message .= "\n\n" . implode("\n", $statuses);
-        } else {
-            $message .= "\n\n✅ No downtime recorded.";
-        }
-
+        $targetStatuses = TargetStatisticService::statusesByDays($target, $days);
+        $message = ClientMessages::targetStatistic($targetStatuses);
         $chat->message($message)->send();
     }
 
 
-//
-//
-//    public function testDownMessage(TelegraphChat $chat, $targetId)
-//    {
-//        $target = Target::find($targetId);
-//        $resultMessage = TargetHttpStatusChecker::checkUrlStatus($target->url);
-//        $chat->message($resultMessage)->send();
-//    }
-//
-//    public function testupmsg(TelegraphChat $chat, $targetId)
-//    {
-//        $target = Target::find($targetId);
-//        $clientMessage = [
-//            'text'    => '🚀 ' . $target->url . ' available!' ,
-//            'message' => 'Status: ' . Target::getStatusText(Target::STATUS_OK),
-//        ];
-//        $clientMessage = <<<HTML
-//                    {$clientMessage['text']}!
-//                    {$clientMessage['message']}
-//                    HTML;
-//
-//        $chat->html($clientMessage)->send();
-//    }
+    public function testTargetDownMessage(TelegraphChat $chat, $targetId): void
+    {
+        $target = Target::find($targetId);
+        $message = ClientMessages::targetDown($target, '404');
+        $chat->message($message)->send();
+    }
+
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Target;
-use App\Services\TargetStatusService;
+use App\Services\TargetStatisticService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -60,7 +60,7 @@ class TargetController extends Controller
     {
         if ($target) {
             $periods = config('target.periods');
-            $statuses = TargetStatusService::statusesAll($target);
+            $statuses = TargetStatisticService::statusesAll($target);
 
             return view('admin.targets.show', ['target' => $target, 'periods' => $periods, 'statuses' => $statuses]);
         }

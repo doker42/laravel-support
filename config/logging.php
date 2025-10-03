@@ -130,15 +130,22 @@ return [
         'checked_status' => [
             'driver' => 'daily',
             'path'   => storage_path('logs/checked_status.log'),
-            'days'   => env('LOG_DAILY_DAYS', 5),
+            'days'   => env('LOG_DAILY_DAYS', 7),
             'level'  => 'info',
         ],
 
-        'status_error' => [
+        'target_error' => [
             'driver' => 'daily',
-            'path'   => storage_path('logs/status_error.log'),
-            'days'   => env('LOG_DAILY_DAYS', 5),
-            'level'  => 'warning',
+            'path'   => storage_path('logs/target_error.log'),
+            'days'   => env('LOG_DAILY_DAYS', 7),
+            'level'  => 'info',
+        ],
+
+        'retry_check' => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/retry_check.log'),
+            'days'   => env('LOG_DAILY_DAYS', 7),
+            'level'  => 'info',
         ],
     ],
 

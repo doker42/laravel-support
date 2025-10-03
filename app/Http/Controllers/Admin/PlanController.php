@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Interval;
 use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -24,7 +25,9 @@ class PlanController extends Controller
      */
     public function create()
     {
-        return view('admin.plans.create');
+        $intervals = Interval::ARR;
+
+        return view('admin.plans.create', ['intervals' => $intervals]);
     }
 
     /**
@@ -37,7 +40,8 @@ class PlanController extends Controller
             'description'  => 'required|string|max:2000',
             'price'        => 'required|integer|max:100',
             'limit'        => 'required|integer|max:100',
-            'interval'     => 'required|integer|max:3600',
+//            'interval'     => 'required|integer|max:3600',
+            'intervals'     => 'required',
             'duration'     => 'required|integer|max:100',
             'active'       => '',
         ]);
@@ -48,6 +52,18 @@ class PlanController extends Controller
         } else {
             $input['active'] = 0;
         }
+
+        if (isset($input['default']) && $input['default'] == 'on') {
+            $input['default'] = 1;
+        } else {
+            $input['default'] = 0;
+        }
+
+
+        if (!empty(Interval::ARR[$input['intervals']])) {
+            $input['intervals'] = json_encode(Interval::ARR[$input['intervals']]);
+        }
+
 
         $target = Plan::create($input);
 
@@ -74,7 +90,10 @@ class PlanController extends Controller
     public function edit(Plan $plan)
     {
         if ($plan) {
-            return view('admin.plans.edit', ['plan' => $plan]);
+
+            $intervals = Interval::ARR;
+
+            return view('admin.plans.edit', ['plan' => $plan, 'intervals' => $intervals]);
         }
         return redirect(route('plan_list'))->withErrors('Failed get plan!');
     }
@@ -89,15 +108,26 @@ class PlanController extends Controller
             'description'  => 'required|string|max:2000',
             'price'        => 'required|integer|max:100',
             'limit'        => 'required|integer|max:100',
-            'interval'     => 'required|integer|max:3600',
+            'intervals'     => 'required',
             'duration'     => 'required|integer|max:1000',
             'active'       => '',
+            'default'      => '',
         ]);
 
         if (isset($input['active']) && $input['active'] == 'on') {
             $input['active'] = 1;
         } else {
             $input['active'] = 0;
+        }
+
+        if (isset($input['default']) && $input['default'] == 'on') {
+            $input['default'] = 1;
+        } else {
+            $input['default'] = 0;
+        }
+
+        if (!empty(Interval::ARR[$input['intervals']])) {
+            $input['intervals'] = Interval::ARR[$input['intervals']];
         }
 
         if ($plan->update($input)) {

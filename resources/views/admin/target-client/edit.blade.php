@@ -39,9 +39,9 @@
                             <div class="form-group">
                                 <label>{{__('Intervals')}}</label>
                                 <select class="form-select" name="interval" id="interval" >
-                                    <option value="{{$targetClient->target->interval}}" selected>{{$targetClient->target->interval}}</option>
-                                    @foreach($intervals as $key => $value)
-                                        <option value="{{$value}}">{{$key}}</option>
+                                    <option value="{{$targetClient->interval}}" selected>{{$targetClient->interval}}</option>
+                                    @foreach($intervals as $interval)
+                                        <option value="{{$interval}}">{{$interval}}</option>
                                     @endforeach
                                 </select>
                             </div>

@@ -2,10 +2,11 @@
 
 namespace App\Jobs;
 
-use App\Helpers\LogHelper;
+use App\Models\Setting;
 use App\Models\Target;
 use App\Models\TargetStatus;
 use App\Services\TelegramLogger;
+use App\Telegraph\ClientMessages;
 use Carbon\Carbon;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,15 +19,16 @@ class TargetStatusChangedHandleJob implements ShouldQueue
     public int $targetId;
 
     public int $status;
-
+    public string|null $errorInfo;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(int $targetId, int $status)
+    public function __construct(int $targetId, int $status, string|null $errorInfo = null)
     {
         $this->targetId = $targetId;
         $this->status   = $status;
+        $this->errorInfo = $errorInfo;
     }
 
     /**
@@ -36,15 +38,10 @@ class TargetStatusChangedHandleJob implements ShouldQueue
     {
         $targetId = $this->targetId;
         $status   = $this->status;
+        $errorInfo = $this->errorInfo;
         $target   = Target::find($targetId);
 
-        $controlMessage = [
-            'text'   => 'Control message',
-            'message' => 'Default message',
-        ];
-
         $lastStatus = TargetStatus::where('target_id', $targetId)->latest()->first();
-//        $tlgChat    = TelegraphChat::find($target->telegraph_chat_id);
 
         if ($status === Target::STATUS_OK) {
 
@@ -53,20 +50,8 @@ class TargetStatusChangedHandleJob implements ShouldQueue
                     'start_date' => Carbon::now()
                 ]);
 
-                $controlMessage = [
-                    'text'    => 'Resource available again',
-                    'message' => $target->url . ' is working again!',
-                ];
-
-//                if ($tlgChat) $tlgChat->message($target->url . ' available again!')->send();
-                $clientMessage = [
-                    'text'    => '🚀 ' . $target->url . ' available!' ,
-                    'message' => 'Status: ' . Target::getStatusText($status),
-                ];
-                $clientMessage = <<<HTML
-                    {$clientMessage['text']}!
-                    {$clientMessage['message']}
-                    HTML;
+                $controlMessage = ClientMessages::controlTargetDown($target);
+                $clientMessage = ClientMessages::targetRestore($target, $status);
             }
         }
         else {
@@ -78,21 +63,8 @@ class TargetStatusChangedHandleJob implements ShouldQueue
                     'status'    => $status,
                 ]);
 
-                $controlMessage = [
-                    'text' => 'Resource unavailable',
-                    'message' => $target->url . ' isn’t working!',
-                ];
-
-//                if ($tlgChat) $tlgChat->message($target->url . ' unavailable!')->send();
-                $clientMessage = [
-                    'text'    => $target->url . ' unavailable!' ,
-                    'message' => 'Status: ' . Target::getStatusText($status),
-                ];
-
-                $clientMessage = <<<HTML
-                    <b>ℹ️ {$clientMessage['text']}!</b>
-                    {$clientMessage['message']}
-                    HTML;
+                $controlMessage = ClientMessages::controlTargetRestore($target);
+                $clientMessage = ClientMessages::targetDown($target, $status, $errorInfo);
             }
         }
 
@@ -100,7 +72,7 @@ class TargetStatusChangedHandleJob implements ShouldQueue
             $this->informClients($target, $clientMessage);
         }
 
-        if (config('admin.control_log_enabled')) {
+        if (config('admin.control_log_enabled') && !empty($controlMessage)) {
             $this->sendToTelegram($controlMessage);
         }
     }
@@ -124,6 +96,9 @@ class TargetStatusChangedHandleJob implements ShouldQueue
 
     public function sendToTelegram($message): void
     {
+        if (!Setting::CLIENT_INFORM_ENABLED) {
+            return;
+        }
         $logger = new TelegramLogger($message, TelegramLogger::TYPE_INFO);
         $logger->handle();
     }

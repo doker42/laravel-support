@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Target;
 use Carbon\Carbon;
 
-class TargetStatusService
+class TargetStatisticService
 {
 
     public static function statusesAll(Target $target)

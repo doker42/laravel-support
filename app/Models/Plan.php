@@ -16,5 +16,18 @@ class Plan extends Model
         'interval',
         'duration',
         'active',
+        'default',
+        'intervals',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($plan) {
+            if ($plan->default == 1) {
+                static::where('id', '!=', $plan->id)->update(['default' => 0]);
+            }
+        });
+    }
 }

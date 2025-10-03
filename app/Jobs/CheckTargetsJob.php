@@ -4,13 +4,14 @@ namespace App\Jobs;
 
 use App\Helpers\LogHelper;
 use App\Models\Target;
+use App\Services\TargetHttpStatusChecker;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 
-class CheckSitesJob implements ShouldQueue
+class CheckTargetsJob implements ShouldQueue
 {
     use Queueable;
 
@@ -38,10 +39,7 @@ class CheckSitesJob implements ShouldQueue
             'timeout' => 10,
             'allow_redirects' => true,
             'http_errors' => false, // не кидать исключения на 4xx/5xx
-            'headers' => [
-                'Referer'    => 'https://google.com',
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            ],
+            'headers' => TargetHttpStatusChecker::CHECK_HEADERS,
         ]);
 
         $retriesIds = [];
@@ -61,7 +59,7 @@ class CheckSitesJob implements ShouldQueue
                 $newStatus = $response->getStatusCode();
                 $oldStatus = $oldStatuses[$id] ?? null;
 
-                $message = "Checked {$url} -> {$newStatus} (was {$oldStatus})";
+                $message = "Checked {$url} -> now {$newStatus} : was {$oldStatus}";
                 LogHelper::control('info', $message);
 
                 if ($oldStatus !== $newStatus) {

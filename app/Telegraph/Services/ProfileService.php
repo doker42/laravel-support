@@ -35,7 +35,6 @@ class ProfileService
             
             <b>Title:</b> {$plan->title}
             <b>Limit:</b> {$plan->limit}
-            <b>Watch Period:</b> {$plan->interval} sec
             <b>Status:</b> {$status}
             <b>Subscription until:</b> {$client->end_subscription}
             HTML;

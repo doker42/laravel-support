@@ -41,7 +41,7 @@
                             </a>
                         </td>
                         <td>{{$targetClient->client->name}}</td>
-                        <td>{{$targetClient->target->interval}}</td>
+                        <td>{{$targetClient->interval}}</td>
                         <td>
                             @php($active = (bool)$targetClient->active)
                             <button type="button"

@@ -27,9 +27,10 @@
                     <th scope="col">{{__('Desc')}}</th>
                     <th scope="col">{{__('Price')}}</th>
                     <th scope="col">{{__('Limit')}}</th>
-                    <th scope="col">{{__('Interval')}}</th>
+                    <th scope="col">{{__('Intervals')}}</th>
                     <th scope="col">{{__('Duration')}}</th>
                     <th scope="col">{{__('Active')}}</th>
+                    <th scope="col">{{__('Default')}}</th>
                     <th scope="col">{{__('Actions')}}</th>
                 </tr>
                 </thead>
@@ -46,12 +47,18 @@
                         <td>{{$plan->description}}</td>
                         <td>{{$plan->price}}</td>
                         <td>{{$plan->limit}}</td>
-                        <td>{{$plan->interval}}</td>
+                        <td>{{$plan->intervals}}</td>
                         <td>{{$plan->duration}}</td>
                         <td>
                             @php($active = (bool)$plan->active)
                             <button class="btn btn-outline-{{$active ? 'success' : 'secondary'}} btn-sm">
                                 {{$active ? 'ON' : 'OFF'}}
+                            </button>
+                        </td>
+                        <td>
+                            @php($default = (bool)$plan->default)
+                            <button class="btn btn-outline-{{$active ? 'success' : 'secondary'}} btn-sm">
+                                {{$default ? 'YES' : 'NO'}}
                             </button>
                         </td>
                         <td  style="display: flex; gap: 5px; align-items: center;">

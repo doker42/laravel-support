@@ -12,8 +12,7 @@ Artisan::command('inspire', function () {
 
 ScheduleTarget::command('subscriptions-update')->dailyAt('01:07');
 
-ScheduleTarget::command('target-manager-command')->everyMinute();
-//ScheduleTarget::command('monitor:start')->everyMinute();
+ScheduleTarget::command('monitor:start')->everyMinute();
 
 Artisan::command('set-command', function () {
     $telBot = \DefStudio\Telegraph\Models\TelegraphBot::find(1);

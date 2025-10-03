@@ -83,25 +83,38 @@ class BotHandler extends WebhookHandler
         app(TargetsService::class)->control($this->chat, $targetId, $this->client());
     }
 
+    public function set_interval(): void
+    {
+        $targetId = $this->data->get('target_id');
+        app(TargetsService::class)->setInterval($this->chat, $targetId, $this->client());
+    }
+
+    public function store_interval()
+    {
+        $targetId = $this->data->get('target_id');
+        $interval = $this->data->get('interval');
+        app(TargetsService::class)->storeInterval($this->chat, $targetId, $this->client(), $interval);
+    }
+
     public function delete(): void
     {
         $targetId = $this->data->get('target_id');
-        app(TargetsService::class)->delete($this->chat, $targetId);
+        app(TargetsService::class)->delete($this->chat, $targetId, $this->client());
     }
 
-    public function stopwatch(): void
+    public function stop_watch(): void
     {
         $targetId = $this->data->get('target_id');
-        app(TargetsService::class)->setActive($this->chat, $targetId, false);
+        app(TargetsService::class)->setActive($this->chat, $targetId, $this->client(), false);
     }
 
-    public function startwatch(): void
+    public function start_watch(): void
     {
         $targetId = $this->data->get('target_id');
-        app(TargetsService::class)->setActive($this->chat, $targetId, true);
+        app(TargetsService::class)->setActive($this->chat, $targetId, $this->client(), true);
     }
 
-    public function checkstatus(): void
+    public function check_status(): void
     {
         $targetId = $this->data->get('target_id');
         app(TargetsService::class)->checkstatus($this->chat, $targetId);
@@ -118,6 +131,12 @@ class BotHandler extends WebhookHandler
         $targetId = $this->data->get('target_id');
         $days = $this->data->get('days');
         app(TargetsService::class)->getStatistic($this->chat, $targetId, $days);
+    }
+
+    public function test_down_message(): void
+    {
+        $targetId = $this->data->get('target_id');
+        app(TargetsService::class)->testTargetDownMessage($this->chat, $targetId);
     }
 
     public function profile(): void

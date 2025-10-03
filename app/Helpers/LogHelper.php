@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 class LogHelper
 {
     public const CHANNEL_CHECKED_STATUS = 'checked_status';
+    public const CHANNEL_RETRY_CHECK = 'retry_check';
+    public const CHANNEL_TARGET_ERROR = 'target_error';
 
     public static function control($level, $message, array $context = []):void
     {
