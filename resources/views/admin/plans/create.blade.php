@@ -85,16 +85,22 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-3 mb-3">
+                        <div class="col-sm-3 mb-2">
                             <div class="form-check form-switch">
                                 <input name="active" class="form-check-input" type="checkbox" id="active">
                                 <label class="form-check-label" for="active">Active</label>
                             </div>
                         </div>
-                        <div class="col-sm-3 mb-3">
+                        <div class="col-sm-3 mb-2">
                             <div class="form-check form-switch">
                                 <input name="default" class="form-check-input" type="checkbox" id="default">
                                 <label class="form-check-label" for="default">Default</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 mb-2">
+                            <div class="form-check form-switch">
+                                <input name="regular" class="form-check-input" type="checkbox" id="regular">
+                                <label class="form-check-label" for="regular">Regular</label>
                             </div>
                         </div>
                     </div>

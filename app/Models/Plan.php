@@ -17,6 +17,7 @@ class Plan extends Model
         'duration',
         'active',
         'default',
+        'regular',
         'intervals',
     ];
 

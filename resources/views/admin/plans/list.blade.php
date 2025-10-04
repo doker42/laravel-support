@@ -31,6 +31,7 @@
                     <th scope="col">{{__('Duration')}}</th>
                     <th scope="col">{{__('Active')}}</th>
                     <th scope="col">{{__('Default')}}</th>
+                    <th scope="col">{{__('Regular')}}</th>
                     <th scope="col">{{__('Actions')}}</th>
                 </tr>
                 </thead>
@@ -59,6 +60,12 @@
                             @php($default = (bool)$plan->default)
                             <button class="btn btn-outline-{{$active ? 'success' : 'secondary'}} btn-sm">
                                 {{$default ? 'YES' : 'NO'}}
+                            </button>
+                        </td>
+                        <td>
+                            @php($regular = (bool)$plan->regular)
+                            <button class="btn btn-outline-{{$regular ? 'success' : 'secondary'}} btn-sm">
+                                {{$regular ? 'YES' : 'NO'}}
                             </button>
                         </td>
                         <td  style="display: flex; gap: 5px; align-items: center;">

@@ -48,6 +48,18 @@
                             {{$plan->active ? 'Active' : "Inactive"}}
                         </td>
                     </tr>
+                    <tr>
+                        <td>Default</td>
+                        <td>
+                            {{$plan->default ? 'Default' : "not default"}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Regular</td>
+                        <td>
+                            {{$plan->regular ? 'Regular' : "custom"}}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

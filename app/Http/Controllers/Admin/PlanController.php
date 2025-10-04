@@ -41,9 +41,11 @@ class PlanController extends Controller
             'price'        => 'required|integer|max:100',
             'limit'        => 'required|integer|max:100',
 //            'interval'     => 'required|integer|max:3600',
-            'intervals'     => 'required',
+            'intervals'    => 'required',
             'duration'     => 'required|integer|max:100',
             'active'       => '',
+            'default'      => '',
+            'regular'      => '',
         ]);
 
 
@@ -59,6 +61,11 @@ class PlanController extends Controller
             $input['default'] = 0;
         }
 
+        if (isset($input['regular']) && $input['regular'] == 'on') {
+            $input['regular'] = 1;
+        } else {
+            $input['regular'] = 0;
+        }
 
         if (!empty(Interval::ARR[$input['intervals']])) {
             $input['intervals'] = json_encode(Interval::ARR[$input['intervals']]);
@@ -112,6 +119,7 @@ class PlanController extends Controller
             'duration'     => 'required|integer|max:1000',
             'active'       => '',
             'default'      => '',
+            'regular'      => '',
         ]);
 
         if (isset($input['active']) && $input['active'] == 'on') {
@@ -124,6 +132,12 @@ class PlanController extends Controller
             $input['default'] = 1;
         } else {
             $input['default'] = 0;
+        }
+
+        if (isset($input['regular']) && $input['regular'] == 'on') {
+            $input['regular'] = 1;
+        } else {
+            $input['regular'] = 0;
         }
 
         if (!empty(Interval::ARR[$input['intervals']])) {

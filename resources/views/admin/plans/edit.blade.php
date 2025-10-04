@@ -3,7 +3,7 @@
 @section('dashboard')
 
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h4 class="h4 content-title">{{__('Works')}}</h4>
+        <h4 class="h4 content-title">{{__('Plans')}}</h4>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
                 <a href="{{route('plan_list')}}" class="btn btn-sm btn-outline-primary">
@@ -115,6 +115,21 @@
                                             {{$plan->default ? 'checked' : ''}}
                                     >
                                     <label class="form-check-label" for="default">{{__('Default plan')}}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- REGULAR --}}
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>{{__('Regular')}}</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input id="regular" name="regular"
+                                           class="form-check-input"
+                                           type="checkbox" role="switch"
+                                            {{$plan->default ? 'checked' : ''}}
+                                    >
+                                    <label class="form-check-label" for="regular">{{__('Regular plan')}}</label>
                                 </div>
                             </div>
                         </div>
