@@ -12,16 +12,14 @@ class ClientMessages
      * @param string|null $errorInfo
      * @return string
      */
-    public static function targetDown(Target $target, string $status, string|null $errorInfo): string
+    public static function targetDown(Target $target, string $status, string|null $errorInfo = null): string
     {
         $clientMessage = [
             'text'    => $target->url . ' unavailable!' ,
             'message' => 'Status: ' . Target::getStatusText($status),
         ];
 
-        if ($errorInfo) {
-            $clientMessage['info'] = $errorInfo;
-        }
+        $clientMessage['info'] = $errorInfo ?: '';
 
         return <<<HTML
             <b>ℹ️ {$clientMessage['text']}</b>

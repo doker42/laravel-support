@@ -3,6 +3,7 @@
 namespace App\Telegraph\Services;
 
 use App\Helpers\LogHelper;
+use App\Models\Interval;
 use App\Models\Target;
 use App\Models\TargetClient;
 use App\Models\TelegraphClient;
@@ -174,7 +175,7 @@ class TargetsService
     {
         $keyboard = Keyboard::make();
 
-        $periods = [7, 30, 60];
+        $periods = [7, 30, 60, 180];
         foreach ($periods as $days) {
             $keyboard->row([
                 Button::make($days . ' days')->action('get_statistic')->param('target_id', $targetId)->param('days', $days),
@@ -187,9 +188,10 @@ class TargetsService
     }
 
 
-    public function setInterval(TelegraphChat $chat, $targetId, TelegraphClient $client)
+    public function setInterval(TelegraphChat $chat, $targetId, TelegraphClient $client): void
     {
         $intervals = json_decode($client->plan->intervals);
+        $intervals = $intervals ?: Interval::FREE;
 
         $keyboard = Keyboard::make();
 

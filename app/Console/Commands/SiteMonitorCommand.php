@@ -28,6 +28,8 @@ class SiteMonitorCommand extends Command
             ->get(['id', 'url'])
             ->toArray();
 
+        LogHelper::control('info', 'Count ' . count($targets));
+
         if (!count($targets)) {
             return;
         }

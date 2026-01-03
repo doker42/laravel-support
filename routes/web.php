@@ -1,18 +1,13 @@
 <?php
 
 use App\Http\Controllers\LandingController;
+use App\Models\TelegraphClient;
 use Carbon\Carbon;
 use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Facades\Route;
 
 //Route::view('/', 'welcome');
 Route::get('/', [LandingController::class, 'index']);
-
-
-//Route::get('/foo', function (){
-//    echo('FOO');
-//});
-
 
 Route::group(['prefix' => config('admin.admin_prefix')], function () {
 
