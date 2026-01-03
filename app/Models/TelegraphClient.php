@@ -76,9 +76,13 @@ class TelegraphClient extends Model
 
     public static function getChatName(TelegraphChat $chat)
     {
-        $chatInfo = $chat->info();
-        $first_name = $chatInfo['first_name'];
-        return $first_name ?: "NonameClient";
+        $chatInfo = $chat->info() ?? [];
+
+        if (!empty($chatInfo['first_name'])) {
+            return $chatInfo['first_name'];
+        }
+
+        return 'NonameClient';
     }
 
 
