@@ -43,6 +43,7 @@ class TargetController extends Controller
         $input['telegraph_client_id'] = 1; //default
         $input['telegraph_chat_id']   = 1; //default
         $input['active'] = 1; //default
+        $input['inform'] = 1; //default
 
         $target = Target::create($input);
 
@@ -89,14 +90,12 @@ class TargetController extends Controller
         $input = $request->validate([
             'url' => 'required|url|max:255|unique:targets,url,' . $target->id,
             'interval'  => 'required|integer|max:3600',
-            'active' => ''
+            'active'   => 'nullable',
+            'inform'   => 'nullable',
         ]);
 
-        if (isset($input['active']) && $input['active'] == 'on') {
-            $input['active'] = 1;
-        } else {
-            $input['active'] = 0;
-        }
+        $input['active'] = $request->boolean('active');
+        $input['inform'] = $request->boolean('inform');
 
         if ($target->update($input)) {
             return redirect(route('target_list'))->with(['status' => __("All ok!")]);

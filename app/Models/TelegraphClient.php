@@ -16,6 +16,7 @@ class TelegraphClient extends Model
         'chat_id',
         'plan_id',
         'await',
+        'inform',
         'name',
         'end_subscription'
     ];

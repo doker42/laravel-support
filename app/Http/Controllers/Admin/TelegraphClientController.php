@@ -57,11 +57,15 @@ class TelegraphClientController extends Controller
     public function update(Request $request, TelegraphClient $client)
     {
         $input = $request->validate([
-           'plan_id' => 'required|int'
+           'plan_id' => 'required|int',
+           'inform'  => 'nullable',
         ]);
 
+        $input['inform'] = $request->boolean('inform');
+
         $client->update([
-            'plan_id' => $input['plan_id']
+            'plan_id' => $input['plan_id'],
+            'inform'  => $input['inform'],
         ]);
 
         return redirect(route('client_list'))->with('status', __('Client was updated'));

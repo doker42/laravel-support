@@ -18,7 +18,7 @@
         <!-- general form elements disabled -->
         <div class="card card-primary">
             <div class="card-header">
-                <h5 class="card-title content-title">{{__('Target edit')}}</h5>
+                <h5 class="card-title content-title">{{__('Client edit')}}</h5>
             </div>
 
             <div class="card-body">
@@ -44,6 +44,21 @@
                                         <option value="{{$plan->id}}">{{$plan->title}}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+
+                        {{-- INFORM --}}
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>{{__('Inform')}}</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input id="inform" name="inform"
+                                           class="form-check-input"
+                                           type="checkbox" role="switch"
+                                            {{$client->inform ? 'checked' : ''}}
+                                    >
+                                    <label class="form-check-label" for="inform">{{__('Inform status')}}</label>
+                                </div>
                             </div>
                         </div>
 

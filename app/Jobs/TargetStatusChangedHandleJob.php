@@ -80,7 +80,10 @@ class TargetStatusChangedHandleJob implements ShouldQueue
 
     private function informClients(Target $target, $clientMessage): void
     {
-        $clients = $target->clients()->wherePivot('active', 1)->get();
+        $clients = $target->clients()
+            ->wherePivot('active', 1)
+            ->wherePivot('inform', 1)
+            ->get();
 
         if (!count($clients)) {
             return;

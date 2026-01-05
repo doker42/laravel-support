@@ -17,6 +17,7 @@
                     <th scope="col">ID</th>
                     <th scope="col">CHAT_ID</th>
                     <th scope="col">AWAIT</th>
+                    <th scope="col">Inform status</th>
                     <th scope="col">{{__('Name')}}</th>
                     <th scope="col">{{__('Plan')}}</th>
                     <th scope="col">{{__('End Subscription')}}</th>
@@ -30,6 +31,7 @@
                         <td>{{$client->id}}</td>
                         <td>{{$client->chat_id}}</td>
                         <td>{{$client->await}}</td>
+                        <td>{{$client->inform}}</td>
                         <td>{{$client->name}}</td>
                         <td>{{$client->plan->title}}</td>
                         <td>{{$client->end_subscription}}</td>

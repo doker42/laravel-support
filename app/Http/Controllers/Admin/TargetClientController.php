@@ -75,14 +75,12 @@ class TargetClientController extends Controller
         $input = $request->validate([
             'url' => 'required|url|max:255',
             'interval'  => 'required|integer|max:3600',
-            'active' => ''
+            'active'   => 'nullable',
+            'inform'   => 'nullable',
         ]);
 
-        if (isset($input['active']) && $input['active'] == 'on') {
-            $input['active'] = 1;
-        } else {
-            $input['active'] = 0;
-        }
+        $input['active'] = $request->boolean('active');
+        $input['inform'] = $request->boolean('inform');
 
         if ($targetClient->update($input)) {
             return redirect(route('target_client_list'))->with(['status' => __("All ok!")]);

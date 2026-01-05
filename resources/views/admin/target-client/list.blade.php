@@ -27,6 +27,7 @@
                     <th scope="col">{{__('Client')}}</th>
                     <th scope="col">{{__('Interval')}}</th>
                     <th scope="col">{{__('Active')}}</th>
+                    <th scope="col">{{__('Informing')}}</th>
                     <th scope="col">{{__('Actions')}}</th>
                 </tr>
                 </thead>
@@ -48,6 +49,14 @@
                                     class="btn btn-toggle-active btn-outline-{{ $active ? 'success' : 'secondary' }} btn-sm"
                                     data-id="{{ $targetClient->id }}">
                                 {{ $active ? 'ON' : 'OFF' }}
+                            </button>
+                        </td>
+                        <td>
+                            @php($inform = (bool)$targetClient->inform)
+                            <button type="button"
+                                    class="btn btn-toggle-active btn-outline-{{ $inform ? 'success' : 'secondary' }} btn-sm"
+                                    data-id="{{ $targetClient->id }}">
+                                {{ $inform ? 'ON' : 'OFF' }}
                             </button>
                         </td>
                         <td  style="display: flex; gap: 5px; align-items: center;">

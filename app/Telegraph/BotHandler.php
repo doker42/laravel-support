@@ -114,6 +114,18 @@ class BotHandler extends WebhookHandler
         app(TargetsService::class)->setActive($this->chat, $targetId, $this->client(), true);
     }
 
+    public function stop_target_client_inform(): void
+    {
+        $targetId = $this->data->get('target_id');
+        app(TargetsService::class)->setTargetClientInform($this->chat, $targetId, $this->client(), false);
+    }
+
+    public function start_target_client_inform(): void
+    {
+        $targetId = $this->data->get('target_id');
+        app(TargetsService::class)->setTargetClientInform($this->chat, $targetId, $this->client(), true);
+    }
+
     public function check_status(): void
     {
         $targetId = $this->data->get('target_id');

@@ -48,7 +48,7 @@
                         </div>
 
                         {{-- ACTIVE --}}
-                        <div class="col-sm-6">
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label>{{__('Active')}}</label>
                                 <div class="form-check form-switch mt-2">
@@ -58,6 +58,21 @@
                                            {{$targetClient->active ? 'checked' : ''}}
                                     >
                                     <label class="form-check-label" for="active">{{__('Active status')}}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- INFORM --}}
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>{{__('Inform')}}</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input id="inform" name="inform"
+                                           class="form-check-input"
+                                           type="checkbox" role="switch"
+                                            {{$targetClient->inform ? 'checked' : ''}}
+                                    >
+                                    <label class="form-check-label" for="inform">{{__('Inform status')}}</label>
                                 </div>
                             </div>
                         </div>

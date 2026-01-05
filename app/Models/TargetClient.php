@@ -13,6 +13,7 @@ class TargetClient extends Model
         'telegraph_client_id',
         'interval',
         'active',
+        'inform',
     ];
 
     protected $table = 'target_client';
@@ -40,6 +41,14 @@ class TargetClient extends Model
             'target_id' => $target_id,
             'telegraph_client_id' => $telegraph_client_id
         ])->update(['active' => $active]);
+    }
+
+    public static function setInform(int $target_id, int $telegraph_client_id, bool $inform)
+    {
+        self::where([
+            'target_id' => $target_id,
+            'telegraph_client_id' => $telegraph_client_id
+        ])->update(['inform' => $inform]);
     }
 
     public static function remove(int $target_id, int $telegraph_client_id)

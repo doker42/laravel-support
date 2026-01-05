@@ -153,6 +153,16 @@ class TargetsService
             ]);
         }
 
+        if ($targetClient->inform) {
+            $keyboard->row([
+                Button::make('Stop inform ' . $target->url)->action('stop_target_client_inform')->param('target_id', $target->id),
+            ]);
+        } else {
+            $keyboard->row([
+                Button::make('Start inform ' . $target->url)->action('start_target_client_inform')->param('target_id', $target->id),
+            ]);
+        }
+
         $keyboard->row([
             Button::make('Check target status')->action('check_status')->param('target_id', $target->id),
         ]);
@@ -251,6 +261,14 @@ class TargetsService
         $targetStatuses = TargetStatisticService::statusesByDays($target, $days);
         $message = ClientMessages::targetStatistic($targetStatuses);
         $chat->message($message)->send();
+    }
+
+    public function setTargetClientInform(TelegraphChat $chat, $targetId, TelegraphClient $client, bool $inform)
+    {
+        $clientId = $client->id;
+        TargetClient::setInform($targetId, $clientId, $inform);
+        $status = $inform ? ' active' : ' inactive';
+        $chat->message("Target inform set " . $status)->send();
     }
 
 
