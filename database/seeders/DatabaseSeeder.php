@@ -19,8 +19,6 @@ class DatabaseSeeder extends Seeder
             DefaultTelegraphClientSeeder::class,
 //            DefaultTelegraphChatSeeder::class,
         ]);
-
-
         // User::factory(10)->create();
 
 //        User::factory()->create([
