@@ -23,7 +23,7 @@ class MenuService
                 Button::make('Profile')->action('profile'),
             ])
             ->row([
-                Button::make($this->t('website'))->url('https://laravelsupport.ovh'),
+                Button::make($this->t('website'))->url(config('app.web_site_url')),
 //                Button::make('📞 Контакты')->action('contacts'),
 //                Button::make('🌎 '.$this->t('choose_language'))->action('chooseLanguage'),
             ]);

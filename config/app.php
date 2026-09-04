@@ -134,4 +134,6 @@ return [
     ],
 
     'control_log_enabled' => env('CONTROL_LOG_ENABLED', 0),
+
+    'web_site_url' => env('WEB_SITE_URL'),
 ];
